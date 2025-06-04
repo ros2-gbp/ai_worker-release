@@ -2,6 +2,19 @@
 Changelog for package ffw_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.0.8 (2025-06-02)
+------------------
+* None
+
+1.0.7 (2025-05-30)
+------------------
+* None
+
+1.0.6 (2025-05-28)
+------------------
+* Added RealSense and ZED launch files
+* Contributors: Woojin Wie
+
 1.0.5 (2025-05-09)
 ------------------
 * None
