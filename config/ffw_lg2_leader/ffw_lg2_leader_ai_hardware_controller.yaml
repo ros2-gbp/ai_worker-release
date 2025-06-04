@@ -36,7 +36,7 @@
         - arm_l_joint5
         - arm_l_joint6
         - arm_l_joint7
-        - l_rh_r1_joint
+        - gripper_l_joint1
       interfaces:
         - position
       offsets:
@@ -62,7 +62,7 @@
         - arm_r_joint5
         - arm_r_joint6
         - arm_r_joint7
-        - r_rh_r1_joint
+        - gripper_r_joint1
       interfaces:
         - position
       offsets:
@@ -81,7 +81,7 @@
   spring_actuator_controller_left:
     ros__parameters:
       joints:
-        - l_rh_r1_joint
+        - gripper_l_joint1
       command_interfaces:
         - effort
       state_interfaces:
@@ -92,7 +92,7 @@
   spring_actuator_controller_right:
     ros__parameters:
       joints:
-        - r_rh_r1_joint
+        - gripper_r_joint1
       command_interfaces:
         - effort
       state_interfaces:
@@ -103,35 +103,36 @@
   joystick_controller_left:
     ros__parameters:
       joystick_sensors:
-        - l_sensorxel_joy
+        - sensorxel_l_joy
       state_interfaces:
         - JOYSTICK X VALUE
         - JOYSTICK Y VALUE
       reverse_interfaces:
         - JOYSTICK Y VALUE
+        - JOYSTICK X VALUE
       joystick_calibration_min: 0.0
-      joystick_calibration_center: 1830.0
-      joystick_calibration_max: 4033.0
+      joystick_calibration_center: 2048.0
+      joystick_calibration_max: 4096.0
       controlled_joints:
-        - neck_joint1
-        - neck_joint2
+        - head_joint1
+        - head_joint2
       joint_states_topic: "/joint_states"
       joint_trajectory_topic: "~/joint_trajectory"
-      jog_scale: 0.02
+      jog_scale: 0.06
       deadzone: 0.05
 
 /**:
   joystick_controller_right:
     ros__parameters:
       joystick_sensors:
-        - r_sensorxel_joy
+        - sensorxel_r_joy
       state_interfaces:
         - JOYSTICK X VALUE
       joystick_calibration_min: 0.0
-      joystick_calibration_center: 1830.0
-      joystick_calibration_max: 4033.0
+      joystick_calibration_center: 2048.0
+      joystick_calibration_max: 4096.0
       controlled_joints:
-        - linear_joint
+        - lift_joint
       joint_states_topic: "/joint_states"
       joint_trajectory_topic: "~/joint_trajectory"
       jog_scale: 0.005
