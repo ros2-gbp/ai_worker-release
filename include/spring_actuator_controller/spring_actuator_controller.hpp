@@ -29,15 +29,6 @@
 #include "hardware_interface/types/hardware_interface_type_values.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_lifecycle/state.hpp"
-#include "sensor_msgs/msg/joint_state.hpp"
-#include "std_msgs/msg/float64_multi_array.hpp"
-
-// KDL includes (if needed for your calculations or expansions)
-#include <kdl_parser/kdl_parser.hpp>
-#include <kdl/frames.hpp>
-#include <kdl/jntarray.hpp>
-#include <kdl/tree.hpp>
-#include <kdl/treeidsolver_recursive_newton_euler.hpp>
 
 // Visibility and parameter definitions
 #include <ffw_spring_actuator_controller/spring_actuator_controller_parameters.hpp>
@@ -48,7 +39,7 @@ namespace spring_actuator_controller
 /**
  * @class SpringActuatorController
  * @brief A ROS 2 controller that simulates a spring-like behavior on a specified joint
- *        (e.g., a “trigger”), while optionally leaving other joints unaltered or with minimal torque.
+ *        (e.g., a "trigger"), while optionally leaving other joints unaltered or with minimal torque.
  *
  * The parameters for this controller (e.g., stiffness, neutral position, friction compensation, etc.)
  * are obtained via a parameter listener defined in @c spring_actuator_controller_parameters.hpp.
@@ -119,11 +110,6 @@ protected:
   std::shared_ptr<ParamListener> param_listener_;
   Params params_;
 
-  // KDL data structures (used if needed for advanced calculations)
-  KDL::Tree tree_;
-  KDL::JntArray q_ddot_;
-  KDL::WrenchMap f_ext_;  // external forces, if needed
-
   /// Switch for dithering logic to overcome static friction
   bool dither_switch_;
 
@@ -159,7 +145,7 @@ protected:
    *
    * For each interface type (effort, position, velocity, etc.), we have a vector of references,
    * each corresponding to a particular joint. `joint_command_interface_[i][j]` gives the
-   * reference for the j-th joint’s i-th command interface type.
+   * reference for the j-th joint's i-th command interface type.
    */
   template<typename T>
   using InterfaceReferences = std::vector<std::vector<std::reference_wrapper<T>>>;
