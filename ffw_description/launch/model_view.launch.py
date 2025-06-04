@@ -44,6 +44,7 @@ def generate_launch_description():
         return LaunchDescription([])
 
     use_gui = LaunchConfiguration('use_gui')
+    model = LaunchConfiguration('model')
 
     urdf_file = Command(
         [
@@ -53,8 +54,8 @@ def generate_launch_description():
                 [
                     FindPackageShare('ffw_description'),
                     'urdf',
-                    'follower',
-                    'ffw_follower_with_rh.urdf.xacro'
+                    model,
+                    'ffw_bg2_follower.urdf.xacro'
                 ]
             ),
             ' ',
@@ -76,6 +77,11 @@ def generate_launch_description():
             'use_gui',
             default_value='true',
             description='Run joint state publisher gui node'),
+
+        DeclareLaunchArgument(
+            'model',
+            default_value='ffw_bg2_rev4_follower',
+            description='Robot model name.'),
 
         Node(
             package='robot_state_publisher',

@@ -80,18 +80,18 @@ public:
 protected:
   void joint_states_callback(const sensor_msgs::msg::JointState::SharedPtr msg);
 
-  std::vector<std::string> fsr_names_;
+  std::vector<std::string> sensorxel_joy_names_;
   std::vector<std::string> state_interface_types_ = {"JOYSTICK X VALUE", "JOYSTICK Y VALUE"};
-  size_t n_fsrs_ = 0;
-  std::vector<std::vector<double>> fsr_values_;  // Changed to 2D vector for X and Y values
+  size_t n_sensorxel_joys_ = 0;
+  std::vector<std::vector<double>> sensorxel_joy_values_;
   std::vector<std::vector<std::reference_wrapper<hardware_interface::LoanedStateInterface>>>
   joint_state_interface_;
   sensor_msgs::msg::JointState current_joint_states_;
-  bool was_active_ = false;  // Track previous FSR state
+  bool was_active_ = false;  // Track previous sensorxel_joy state
   std::vector<double> last_active_positions_;  // Store last active positions
   bool has_joint_states_ = false;  // Track if joint states have been received
 
-  rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr fsr_publisher_;
+  rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr sensorxel_joy_publisher_;
   rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr joint_trajectory_publisher_;
   rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr joint_states_subscriber_;
 
