@@ -1,0 +1,12 @@
+Source: ros-jazzy-ffw-bringup
+Section: misc
+Priority: optional
+Maintainer: Pyo <pyo@robotis.com>
+Build-Depends: debhelper (>= 9.0.0), ros-jazzy-ros-workspace, python3-all, python3-setuptools, dh-python
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-jazzy-ffw-bringup
+Architecture: any
+Depends: ${python3:Depends}, ${misc:Depends}, ros-jazzy-ros-workspace
+Description: ROS 2 launch scripts for starting the FFW
