@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright 2024 ROBOTIS CO., LTD.
+# Copyright 2025 ROBOTIS CO., LTD.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,12 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# Author: Wonho Yoon, Sungho Woo
+# Authors: Sungho Woo, Woojin Wie, Wonho Yun
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, RegisterEventHandler
+from launch.actions import IncludeLaunchDescription, TimerAction
 from launch.conditions import IfCondition, UnlessCondition
 from launch.event_handlers import OnProcessExit
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command, FindExecutable, LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
@@ -37,6 +39,12 @@ def generate_launch_description():
                               description='Enable fake sensor commands.'),
         DeclareLaunchArgument('port_name', default_value='/dev/follower',
                               description='Port name for hardware connection.'),
+        DeclareLaunchArgument('launch_cameras', default_value='true',
+                              description='Whether to launch cameras.'),
+        DeclareLaunchArgument('init_position', default_value='true',
+                              description='Whether to launch the init_position node.'),
+        DeclareLaunchArgument('model', default_value='ffw_bg2_rev4_follower',
+                              description='Robot model name.'),
     ]
 
     start_rviz = LaunchConfiguration('start_rviz')
@@ -44,14 +52,17 @@ def generate_launch_description():
     use_fake_hardware = LaunchConfiguration('use_fake_hardware')
     fake_sensor_commands = LaunchConfiguration('fake_sensor_commands')
     port_name = LaunchConfiguration('port_name')
+    launch_cameras = LaunchConfiguration('launch_cameras')
+    init_position = LaunchConfiguration('init_position')
+    model = LaunchConfiguration('model')
 
     robot_description_content = Command([
         PathJoinSubstitution([FindExecutable(name='xacro')]),
         ' ',
         PathJoinSubstitution([FindPackageShare('ffw_description'),
                               'urdf',
-                              'follower',
-                              'ffw_follower_with_rh_fast.urdf.xacro']),
+                              model,
+                              'ffw_bg2_follower.urdf.xacro']),
         ' ',
         'use_sim:=', use_sim,
         ' ',
@@ -60,10 +71,13 @@ def generate_launch_description():
         'fake_sensor_commands:=', fake_sensor_commands,
         ' ',
         'port_name:=', port_name,
+        ' ',
+        'model:=', model,
     ])
 
     controller_manager_config = PathJoinSubstitution([
-        FindPackageShare('ffw_bringup'), 'config', 'follower_with_rh_hardware_controller.yaml'
+        FindPackageShare('ffw_bringup'), 'config', model,
+        'ffw_bg2_follower_ai_hardware_controller.yaml'
     ])
     rviz_config_file = PathJoinSubstitution([
         FindPackageShare('ffw_description'), 'rviz', 'ffw.rviz'
@@ -82,9 +96,9 @@ def generate_launch_description():
              '/leader/joint_trajectory_command_broadcaster_left/joint_trajectory'),
             ('/arm_r_controller/joint_trajectory',
              '/leader/joint_trajectory_command_broadcaster_right/joint_trajectory'),
-            ('/neck_controller/joint_trajectory',
+            ('/head_controller/joint_trajectory',
              '/leader/joystick_controller_left/joint_trajectory'),
-            ('/body_controller/joint_trajectory',
+            ('/lift_controller/joint_trajectory',
              '/leader/joystick_controller_right/joint_trajectory')
         ]
     )
@@ -117,8 +131,8 @@ def generate_launch_description():
         arguments=[
             'arm_l_controller',
             'arm_r_controller',
-            'neck_controller',
-            'body_controller'
+            'head_controller',
+            'lift_controller'
         ],
         parameters=[robot_description],
     )
@@ -130,6 +144,69 @@ def generate_launch_description():
         )
     )
 
+    trajectory_params_file = PathJoinSubstitution([
+        FindPackageShare('ffw_bringup'),
+        'config',
+        model,
+        'ffw_bg2_follower_initial_positions.yaml',
+    ])
+
+    joint_trajectory_executor_left = Node(
+        package='ffw_bringup',
+        executable='joint_trajectory_executor',
+        name='arm_l_joint_trajectory_executor',
+        parameters=[trajectory_params_file],
+        output='screen',
+    )
+    joint_trajectory_executor_right = Node(
+        package='ffw_bringup',
+        executable='joint_trajectory_executor',
+        name='arm_r_joint_trajectory_executor',
+        parameters=[trajectory_params_file],
+        output='screen',
+    )
+    joint_trajectory_executor_head = Node(
+        package='ffw_bringup',
+        executable='joint_trajectory_executor',
+        name='head_joint_trajectory_executor',
+        parameters=[trajectory_params_file],
+        output='screen',
+    )
+    joint_trajectory_executor_lift = Node(
+        package='ffw_bringup',
+        executable='joint_trajectory_executor',
+        name='lift_joint_trajectory_executor',
+        parameters=[trajectory_params_file],
+        output='screen',
+    )
+
+    init_position_event_handler = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=robot_controller_spawner,
+            on_exit=[
+                joint_trajectory_executor_left,
+                joint_trajectory_executor_right,
+                joint_trajectory_executor_head,
+                joint_trajectory_executor_lift
+            ]
+        ),
+        condition=IfCondition(init_position)
+    )
+
+    # Camera launch include
+    bringup_launch_dir = PathJoinSubstitution([FindPackageShare('ffw_bringup'), 'launch'])
+    camera_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(PathJoinSubstitution([bringup_launch_dir,
+                                                            'camera.launch.py'])),
+        condition=IfCondition(launch_cameras)
+    )
+
+    # Camera timers with conditional delay based on init_position
+    camera_timer_20s = TimerAction(period=20.0, actions=[camera_launch],
+                                   condition=IfCondition(init_position))
+    camera_timer_10s = TimerAction(period=10.0, actions=[camera_launch],
+                                   condition=UnlessCondition(init_position))
+
     return LaunchDescription(
         declared_arguments + [
             control_node,
@@ -137,5 +214,8 @@ def generate_launch_description():
             joint_state_broadcaster_spawner,
             delay_rviz_after_joint_state_broadcaster_spawner,
             robot_controller_spawner,
+            init_position_event_handler,
+            camera_timer_20s,
+            camera_timer_10s,
         ]
     )
