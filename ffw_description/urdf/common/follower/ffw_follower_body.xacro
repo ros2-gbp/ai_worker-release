@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+   <xacro:macro name="ffw_follower_body" params="prefix parent *origin">
+
+      <xacro:include filename="$(find realsense2_description)/urdf/_d405.urdf.xacro" />
+      <xacro:property name="meshes_file_direction" value="package://ffw_description/meshes/common/follower" />
+
+      <joint name="${prefix}lift_joint" type="prismatic">
+         <parent link="${parent}"/>
+         <child link="${prefix}arm_base_link" />
+         <xacro:insert_block name="origin" />
+         <axis xyz="0 0 1" />
+         <limit velocity="4.8" effort="1000" lower="-0.5" upper="0.0" />
+         <dynamics damping="0.1" />
+      </joint>
+
+      <link name="${prefix}arm_base_link">
+         <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/body_arm_assy.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+               <material name="white">
+                  <color rgba="1 1 1 1"/>
+               </material>
+         </visual>
+         <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/body_arm_assy.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+         </collision>
+      </link>
+
+      <joint name="${prefix}head_joint1" type="revolute">
+         <parent link="${prefix}arm_base_link" />
+         <child link="${prefix}head_link1" />
+         <origin xyz="0.0494878 0 0.102123" rpy="0 0 0" />
+         <axis xyz="0 1 0" />
+         <limit velocity="4.8" effort="1000" lower="-0.2317" upper="0.6951" />
+         <dynamics damping="0.1" />
+      </joint>
+      <link name="${prefix}head_link1">
+         <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/head_link1.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+               <material name="grey">
+                  <color rgba="0.2 0.2 0.2 1"/>
+               </material>
+         </visual>
+         <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/head_link1.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+         </collision>
+      </link>
+      <joint name="${prefix}head_joint2" type="revolute">
+         <parent link="${prefix}head_link1" />
+         <child link="${prefix}head_link2" />
+         <origin xyz="0.0365694 0 0.0563797" rpy="0 0 0" />
+         <axis xyz="0 0 1" />
+         <limit velocity="4.8" effort="1000" lower="-0.35" upper="0.35" />
+         <dynamics damping="0.1" />
+      </joint>
+      <link name="${prefix}head_link2">
+         <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/head_link2.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+               <material name="white">
+                  <color rgba="1 1 1 1"/>
+               </material>
+         </visual>
+         <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/head_link2.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+         </collision>
+      </link>
+
+      <joint name="${prefix}arm_l_joint1" type="revolute">
+         <parent link="${prefix}arm_base_link" />
+         <child link="${prefix}arm_l_link1" />
+         <origin xyz="0 0.1045 0" rpy="0 0 0" />
+         <axis xyz="0 1 0" />
+         <limit velocity="4.8" effort="1000" lower="-3.14" upper="3.14" />
+         <dynamics damping="0.1" />
+      </joint>
+      <link name="${prefix}arm_l_link1">
+         <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/arm_l_link1.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+               <material name="black">
+                  <color rgba="0.2 0.2 0.2 1"/>
+               </material>
+         </visual>
+         <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/arm_l_link1.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+         </collision>
+      </link>
+      <joint name="${prefix}arm_l_joint2" type="revolute">
+         <parent link="${prefix}arm_l_link1" />
+         <child link="${prefix}arm_l_link2" />
+         <origin xyz="0 0.123 0" rpy="0 0 0" />
+         <axis xyz="1 0 0" />
+         <limit velocity="4.8" effort="1000" lower="0.0" upper="3.14" />
+         <dynamics damping="0.1" />
+      </joint>
+      <link name="${prefix}arm_l_link2">
+         <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/arm_l_link2.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+               <material name="black">
+                  <color rgba="0.2 0.2 0.2 1"/>
+               </material>
+         </visual>
+         <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/arm_l_link2.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+         </collision>
+      </link>
+      <joint name="${prefix}arm_l_joint3" type="revolute">
+         <parent link="${prefix}arm_l_link2" />
+         <child link="${prefix}arm_l_link3" />
+         <origin xyz="0 0 -0.165" rpy="0 0 0" />
+         <axis xyz="0 0 1" />
+         <limit velocity="4.8" effort="1000" lower="-3.14" upper="3.14" />
+         <dynamics damping="0.1" />
+      </joint>
+      <link name="${prefix}arm_l_link3">
+         <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/arm_l_link3.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+               <material name="black">
+                  <color rgba="0.2 0.2 0.2 1"/>
+               </material>
+         </visual>
+         <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/arm_l_link3.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+         </collision>
+      </link>
+      <joint name="${prefix}arm_l_joint4" type="revolute">
+         <parent link="${prefix}arm_l_link3" />
+         <child link="${prefix}arm_l_link4" />
+         <origin xyz="0.041004 0 -0.135" rpy="0 0 0" />
+         <axis xyz="0 1 0" />
+         <limit velocity="4.8" effort="1000" lower="-2.9361" upper="1.0786" />
+         <dynamics damping="0.1" />
+      </joint>
+      <link name="${prefix}arm_l_link4">
+         <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/arm_l_link4.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+               <material name="black">
+                  <color rgba="0.2 0.2 0.2 1"/>
+               </material>
+         </visual>
+         <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/arm_l_link4.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+         </collision>
+      </link>
+      <joint name="${prefix}arm_l_joint5" type="revolute">
+         <parent link="${prefix}arm_l_link4" />
+         <child link="${prefix}arm_l_link5" />
+         <origin xyz="-0.041004 0 -0.1489" rpy="0 0 0" />
+         <axis xyz="0 0 1" />
+         <limit velocity="4.8" effort="1000" lower="-3.14" upper="3.14" />
+         <dynamics damping="0.1" />
+      </joint>
+      <link name="${prefix}arm_l_link5">
+         <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/arm_l_link5.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+               <material name="black">
+                  <color rgba="0.2 0.2 0.2 1"/>
+               </material>
+         </visual>
+         <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/arm_l_link5.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+         </collision>
+      </link>
+      <joint name="${prefix}arm_l_joint6" type="revolute">
+         <parent link="${prefix}arm_l_link5" />
+         <child link="${prefix}arm_l_link6" />
+         <origin xyz="0 0 -0.1041" rpy="0 0 0" />
+         <axis xyz="0 1 0" />
+         <limit velocity="4.8" effort="1000" lower="-1.57" upper="1.57" />
+         <dynamics damping="0.1" />
+      </joint>
+      <link name="${prefix}arm_l_link6">
+         <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/arm_l_link6.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+               <material name="black">
+                  <color rgba="0.2 0.2 0.2 1"/>
+               </material>
+         </visual>
+         <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/arm_l_link6.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+         </collision>
+      </link>
+      <joint name="${prefix}arm_l_joint7" type="revolute">
+         <parent link="${prefix}arm_l_link6" />
+         <child link="${prefix}arm_l_link7" />
+         <origin xyz="0 0 -0.0885" rpy="0 0 0" />
+         <axis xyz="1 0 0" />
+         <limit velocity="4.8" effort="1000" lower="-1.8201" upper="1.5804" />
+         <dynamics damping="0.1" />
+      </joint>
+      <link name="${prefix}arm_l_link7">
+         <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/arm_l_link7.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+               <material name="black">
+                  <color rgba="0.2 0.2 0.2 1"/>
+               </material>
+         </visual>
+         <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/arm_l_link7.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+         </collision>
+      </link>
+      <xacro:sensor_d405 parent="${prefix}arm_l_link7" use_nominal_extrinsics="false" name="${prefix}camera_l">
+         <origin xyz="0.108236 -0.021 -0.062552" rpy="-1.57079632679 1.66678943569 0"/>
+      </xacro:sensor_d405>
+
+
+      <joint name="${prefix}arm_r_joint1" type="revolute">
+         <parent link="${prefix}arm_base_link" />
+         <child link="${prefix}arm_r_link1" />
+         <origin xyz="0 -0.1045 0" rpy="0 0 0" />
+         <axis xyz="0 1 0" />
+         <limit velocity="4.8" effort="1000" lower="-3.14" upper="3.14" />
+         <dynamics damping="0.1" />
+      </joint>
+      <link name="${prefix}arm_r_link1">
+         <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/arm_r_link1.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+               <material name="black">
+                  <color rgba="0.2 0.2 0.2 1"/>
+               </material>
+         </visual>
+         <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/arm_r_link1.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+         </collision>
+      </link>
+      <joint name="${prefix}arm_r_joint2" type="revolute">
+         <parent link="${prefix}arm_r_link1" />
+         <child link="${prefix}arm_r_link2" />
+         <origin xyz="0 -0.123 0" rpy="0 0 0" />
+         <axis xyz="1 0 0" />
+         <limit velocity="4.8" effort="1000" lower="-3.14" upper="0" />
+         <dynamics damping="0.1" />
+      </joint>
+      <link name="${prefix}arm_r_link2">
+         <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/arm_r_link2.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+               <material name="black">
+                  <color rgba="0.2 0.2 0.2 1"/>
+               </material>
+         </visual>
+         <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/arm_r_link2.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+         </collision>
+      </link>
+      <joint name="${prefix}arm_r_joint3" type="revolute">
+         <parent link="${prefix}arm_r_link2" />
+         <child link="${prefix}arm_r_link3" />
+         <origin xyz="0 0 -0.165" rpy="0 0 0" />
+         <axis xyz="0 0 1" />
+         <limit velocity="4.8" effort="1000" lower="-3.14" upper="3.14" />
+         <dynamics damping="0.1" />
+      </joint>
+      <link name="${prefix}arm_r_link3">
+         <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/arm_r_link3.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+               <material name="black">
+                  <color rgba="0.2 0.2 0.2 1"/>
+               </material>
+         </visual>
+         <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/arm_r_link3.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+         </collision>
+      </link>
+      <joint name="${prefix}arm_r_joint4" type="revolute">
+         <parent link="${prefix}arm_r_link3" />
+         <child link="${prefix}arm_r_link4" />
+         <origin xyz="0.041004 0 -0.135" rpy="0 0 0" />
+         <axis xyz="0 1 0" />
+         <limit velocity="4.8" effort="1000" lower="-2.9361" upper="1.0786" />
+         <dynamics damping="0.1" />
+      </joint>
+      <link name="${prefix}arm_r_link4">
+         <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/arm_r_link4.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+               <material name="black">
+                  <color rgba="0.2 0.2 0.2 1"/>
+               </material>
+         </visual>
+         <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/arm_r_link4.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+         </collision>
+      </link>
+      <joint name="${prefix}arm_r_joint5" type="revolute">
+         <parent link="${prefix}arm_r_link4" />
+         <child link="${prefix}arm_r_link5" />
+         <origin xyz="-0.041004 0 -0.1489" rpy="0 0 0" />
+         <axis xyz="0 0 1" />
+         <limit velocity="4.8" effort="1000" lower="-3.14" upper="3.14" />
+         <dynamics damping="0.1" />
+      </joint>
+      <link name="${prefix}arm_r_link5">
+         <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/arm_r_link5.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+               <material name="black">
+                  <color rgba="0.2 0.2 0.2 1"/>
+               </material>
+         </visual>
+         <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/arm_r_link5.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+         </collision>
+      </link>
+      <joint name="${prefix}arm_r_joint6" type="revolute">
+         <parent link="${prefix}arm_r_link5" />
+         <child link="${prefix}arm_r_link6" />
+         <origin xyz="0 0 -0.1041" rpy="0 0 0" />
+         <axis xyz="0 1 0" />
+         <limit velocity="4.8" effort="1000" lower="-1.57" upper="1.57" />
+         <dynamics damping="0.1" />
+      </joint>
+      <link name="${prefix}arm_r_link6">
+         <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/arm_r_link6.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+               <material name="black">
+                  <color rgba="0.2 0.2 0.2 1"/>
+               </material>
+         </visual>
+         <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/arm_r_link6.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+         </collision>
+      </link>
+      <joint name="${prefix}arm_r_joint7" type="revolute">
+         <parent link="${prefix}arm_r_link6" />
+         <child link="${prefix}arm_r_link7" />
+         <origin xyz="0 0 -0.0885" rpy="0 0 0" />
+         <axis xyz="1 0 0" />
+         <limit velocity="4.8" effort="1000" lower="-1.5804" upper="1.8201" />
+         <dynamics damping="0.1" />
+      </joint>
+      <link name="${prefix}arm_r_link7">
+         <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/arm_r_link7.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+               <material name="black">
+                  <color rgba="0.2 0.2 0.2 1"/>
+               </material>
+         </visual>
+         <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+               <mesh filename="${meshes_file_direction}/arm_r_link7.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+         </collision>
+      </link>
+      <xacro:sensor_d405 parent="${prefix}arm_r_link7" use_nominal_extrinsics="false" name="${prefix}camera_r">
+         <origin xyz="0.108236 -0.021 -0.062552" rpy="-1.57079632679 1.66678943569 0"/>
+      </xacro:sensor_d405>
+
+   </xacro:macro>
+
+</robot>
