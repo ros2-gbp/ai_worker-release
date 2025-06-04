@@ -27,7 +27,7 @@ def generate_launch_description():
     declared_arguments = [
         DeclareLaunchArgument(
             'description_file',
-            default_value='ffw_leader_with_rh.urdf.xacro',
+            default_value='ffw_lg2_leader.urdf.xacro',
             description='URDF/XACRO file for the robot model.',
         ),
     ]
@@ -39,7 +39,8 @@ def generate_launch_description():
         [
             FindPackageShare('ffw_bringup'),
             'config',
-            'leader_with_rh_hardware_controller.yaml',
+            'ffw_lg2_leader',
+            'ffw_lg2_leader_ai_hardware_controller.yaml',
         ]
     )
 
@@ -56,7 +57,7 @@ def generate_launch_description():
             PathJoinSubstitution([FindExecutable(name='xacro')]),
             ' ',
             PathJoinSubstitution(
-                [FindPackageShare('ffw_description'), 'urdf', 'leader', description_file]
+                [FindPackageShare('ffw_description'), 'urdf', 'ffw_lg2_leader', description_file]
             ),
         ]
     )
@@ -81,7 +82,7 @@ def generate_launch_description():
         package='robot_state_publisher',
         executable='robot_state_publisher',
         output='both',
-        parameters=[robot_description],
+        parameters=[robot_description, {'frame_prefix': 'leader_'}],
     )
 
     # Wrap everything in a namespace 'leader'
