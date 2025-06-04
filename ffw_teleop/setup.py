@@ -10,7 +10,7 @@ authors = ', '.join(author for author, _ in authors_info)
 author_emails = ', '.join(email for _, email in authors_info)
 setup(
     name=package_name,
-    version='1.0.5',
+    version='1.0.8',
     packages=find_packages(exclude=[]),
     data_files=[
         ('share/ament_index/resource_index/packages',
@@ -28,7 +28,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'keyborad_control_with_rh = ffw_teleop.keyboard_control_with_rh:main',
+            'keyborad_control = ffw_teleop.keyboard_control:main',
         ],
     },
 )
