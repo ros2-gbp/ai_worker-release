@@ -211,12 +211,12 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        neck_link1:
+        head_link1:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        neck_link2:
+        head_link2:
           Alpha: 1
           Show Axes: false
           Show Trail: false
