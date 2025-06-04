@@ -46,9 +46,9 @@ JoystickController::state_interface_configuration() const
   controller_interface::InterfaceConfiguration config;
   config.type = controller_interface::interface_configuration_type::INDIVIDUAL;
 
-  for (const auto & fsr_name : fsr_names_) {
+  for (const auto & sensorxel_joy_name : sensorxel_joy_names_) {
     for (const auto & interface_type : state_interface_types_) {
-      config.names.push_back(fsr_name + "/" + interface_type);
+      config.names.push_back(sensorxel_joy_name + "/" + interface_type);
     }
   }
 
@@ -85,9 +85,9 @@ controller_interface::return_type JoystickController::update(
     return controller_interface::return_type::OK;
   }
 
-  bool any_fsr_active = false;
-  // Read FSR values from hardware interfaces
-  for (size_t i = 0; i < n_fsrs_; ++i) {
+  bool any_sensorxel_joy_active = false;
+  // Read sensorxel_joy values from hardware interfaces
+  for (size_t i = 0; i < n_sensorxel_joys_; ++i) {
     // Read values for each interface type
     for (size_t j = 0; j < state_interface_types_.size(); ++j) {
       if (j >= joint_state_interface_.size() || i >= joint_state_interface_[j].size()) {
@@ -95,7 +95,12 @@ controller_interface::return_type JoystickController::update(
         continue;
       }
 
-      double raw_adc = joint_state_interface_[j][i].get().get_value();
+      auto opt_value = joint_state_interface_[j][i].get().get_optional();
+      if (!opt_value.has_value()) {
+        RCLCPP_ERROR(get_node()->get_logger(), "No value for state interface [%zu][%zu]", j, i);
+        continue;
+      }
+      double raw_adc = opt_value.value();
 
       // Normalize ADC value to [-1.0, 1.0] range
       double normalized_value;
@@ -113,7 +118,7 @@ controller_interface::return_type JoystickController::update(
       if (std::abs(normalized_value) < params_.deadzone) {
         normalized_value = 0.0;
       } else {
-        any_fsr_active = true;
+        any_sensorxel_joy_active = true;
         // Scale the value to account for deadzone
         if (normalized_value > 0) {
           normalized_value = (normalized_value - params_.deadzone) / (1.0 - params_.deadzone);
@@ -132,12 +137,12 @@ controller_interface::return_type JoystickController::update(
       }
 
       // Store normalized value
-      fsr_values_[i][j] = normalized_value;
+      sensorxel_joy_values_[i][j] = normalized_value;
     }
   }
 
   // Handle transition from active to inactive (entering deadzone)
-  if (was_active_ && !any_fsr_active && !current_joint_states_.name.empty() &&
+  if (was_active_ && !any_sensorxel_joy_active && !current_joint_states_.name.empty() &&
     !params_.controlled_joints.empty())
   {
     // Store the last active positions
@@ -161,8 +166,10 @@ controller_interface::return_type JoystickController::update(
     trajectory_msgs::msg::JointTrajectoryPoint point;
     point.time_from_start = rclcpp::Duration(0, 0);
 
-    if (any_fsr_active && !fsr_values_.empty() && !fsr_values_[0].empty()) {
-      // Calculate new positions based on FSR values
+    if (any_sensorxel_joy_active && !sensorxel_joy_values_.empty() &&
+      !sensorxel_joy_values_[0].empty())
+    {
+      // Calculate new positions based on sensorxel_joy values
       for (size_t i = 0; i < params_.controlled_joints.size(); ++i) {
         const auto & joint_name = params_.controlled_joints[i];
         auto it = std::find(current_joint_states_.name.begin(), current_joint_states_.name.end(),
@@ -173,10 +180,10 @@ controller_interface::return_type JoystickController::update(
 
           // Use X value for all joints if only X interface is available
           // Otherwise use X for first joint and Y for second joint
-          double fsr_value = (state_interface_types_.size() > 1 && i == 1) ?
-            fsr_values_[0][1] : fsr_values_[0][0];
+          double sensorxel_joy_value = (state_interface_types_.size() > 1 && i == 1) ?
+            sensorxel_joy_values_[0][1] : sensorxel_joy_values_[0][0];
 
-          double new_position = current_position + fsr_value * params_.jog_scale;
+          double new_position = current_position + sensorxel_joy_value * params_.jog_scale;
           point.positions.push_back(new_position);
           // Store the new position as last active position
           last_active_positions_[i] = new_position;
@@ -195,16 +202,19 @@ controller_interface::return_type JoystickController::update(
     joint_trajectory_publisher_->publish(trajectory_msg);
   }
 
-  // Publish FSR values
-  auto fsr_msg = std_msgs::msg::Float64MultiArray();
+  // Publish sensorxel_joy values
+  auto sensorxel_joy_msg = std_msgs::msg::Float64MultiArray();
   // Flatten the 2D vector for publishing
-  for (const auto & fsr_value : fsr_values_) {
-    fsr_msg.data.insert(fsr_msg.data.end(), fsr_value.begin(), fsr_value.end());
+  for (const auto & sensorxel_joy_value : sensorxel_joy_values_) {
+    sensorxel_joy_msg.data.insert(
+      sensorxel_joy_msg.data.end(),
+      sensorxel_joy_value.begin(),
+      sensorxel_joy_value.end());
   }
-  fsr_publisher_->publish(fsr_msg);
+  sensorxel_joy_publisher_->publish(sensorxel_joy_msg);
 
   // Update previous state
-  was_active_ = any_fsr_active;
+  was_active_ = any_sensorxel_joy_active;
 
   return controller_interface::return_type::OK;
 }
@@ -239,26 +249,26 @@ controller_interface::CallbackReturn JoystickController::on_configure(
   // get parameters from the listener in case they were updated
   params_ = param_listener_->get_params();
 
-  // Get FSR sensor names from parameters
-  fsr_names_ = params_.joystick_sensors;
-  n_fsrs_ = fsr_names_.size();
+  // Get sensorxel_joy sensor names from parameters
+  sensorxel_joy_names_ = params_.joystick_sensors;
+  n_sensorxel_joys_ = sensorxel_joy_names_.size();
 
-  if (fsr_names_.empty()) {
+  if (sensorxel_joy_names_.empty()) {
     RCLCPP_WARN(logger, "'joystick_sensors' parameter is empty.");
   }
 
-  // Initialize the FSR values vector with the correct size
-  fsr_values_.resize(n_fsrs_);
-  for (auto & vec : fsr_values_) {
+  // Initialize the sensorxel_joy values vector with the correct size
+  sensorxel_joy_values_.resize(n_sensorxel_joys_);
+  for (auto & vec : sensorxel_joy_values_) {
     vec.resize(state_interface_types_.size(), 0.0);
   }
 
   // Initialize last active positions vector
   last_active_positions_.resize(params_.controlled_joints.size(), 0.0);
 
-  // Create publisher for FSR values
-  fsr_publisher_ = get_node()->create_publisher<std_msgs::msg::Float64MultiArray>(
-    "~/fsr_values", rclcpp::SystemDefaultsQoS());
+  // Create publisher for sensorxel_joy values
+  sensorxel_joy_publisher_ = get_node()->create_publisher<std_msgs::msg::Float64MultiArray>(
+    "~/sensorxel_joy_values", rclcpp::SystemDefaultsQoS());
 
   // Create publisher for joint trajectory
   joint_trajectory_publisher_ = get_node()->create_publisher<trajectory_msgs::msg::JointTrajectory>(
@@ -284,17 +294,17 @@ controller_interface::CallbackReturn JoystickController::on_activate(
   // Initialize state interface vector
   joint_state_interface_.resize(state_interface_types_.size());
 
-  // Order all Joystick sensors in the storage
+  // Order all sensorxel_joy sensors in the storage
   for (size_t i = 0; i < state_interface_types_.size(); ++i) {
     const auto & interface = state_interface_types_[i];
     std::vector<std::reference_wrapper<hardware_interface::LoanedStateInterface>>
     ordered_interfaces;
     if (!controller_interface::get_ordered_interfaces(
-        state_interfaces_, fsr_names_, interface, ordered_interfaces))
+        state_interfaces_, sensorxel_joy_names_, interface, ordered_interfaces))
     {
       RCLCPP_ERROR(
         logger, "Expected %zu '%s' state interfaces, got %zu.",
-        n_fsrs_, interface.c_str(), ordered_interfaces.size());
+        n_sensorxel_joys_, interface.c_str(), ordered_interfaces.size());
       return CallbackReturn::ERROR;
     }
     joint_state_interface_[i] = ordered_interfaces;
@@ -328,7 +338,6 @@ controller_interface::CallbackReturn JoystickController::on_shutdown(
 {
   return CallbackReturn::SUCCESS;
 }
-
 }  // namespace joystick_controller
 
 #include "pluginlib/class_list_macros.hpp"

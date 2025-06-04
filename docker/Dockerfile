@@ -21,6 +21,20 @@ ARG TARGETARCH
 # To avoid waiting for input during package installation
 ENV DEBIAN_FRONTEND=noninteractive
 
+RUN rm /etc/apt/sources.list.d/ros2.list || true && \
+    rm /usr/share/keyrings/ros-archive-keyring.gpg || true && \
+    rm /etc/apt/sources.list.d/ros2-latest.list || true && \
+    rm /usr/share/keyrings/ros2-latest-archive-keyring.gpg || true
+
+RUN apt-get update \
+  && apt-get install -y ca-certificates curl
+
+RUN export ROS_APT_SOURCE_VERSION=$(curl -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | grep -F "tag_name" | awk -F\" '{print $4}') ;\
+    curl -L -s -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(. /etc/os-release && echo $VERSION_CODENAME)_all.deb" \
+    && apt-get update \
+    && apt-get install /tmp/ros2-apt-source.deb \
+    && rm -f /tmp/ros2-apt-source.deb
+
 # Builder dependencies installation
 RUN apt-get update || true \
     && apt-get install -y --no-install-recommends \
@@ -99,6 +113,42 @@ ENV PYTHONPATH=$PYTHONPATH:/usr/local/lib
 # Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
 
+RUN rm /etc/apt/sources.list.d/ros2.list || true && \
+    rm /usr/share/keyrings/ros-archive-keyring.gpg || true && \
+    rm /etc/apt/sources.list.d/ros2-latest.list || true && \
+    rm /usr/share/keyrings/ros2-latest-archive-keyring.gpg || true
+
+RUN apt-get update \
+  && apt-get install -y ca-certificates curl
+
+RUN export ROS_APT_SOURCE_VERSION=$(curl -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | grep -F "tag_name" | awk -F\" '{print $4}') ;\
+    curl -L -s -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(. /etc/os-release && echo $VERSION_CODENAME)_all.deb" \
+    && apt-get update \
+    && apt-get install /tmp/ros2-apt-source.deb \
+    && rm -f /tmp/ros2-apt-source.deb
+
+# Install ZED SDK
+ARG L4T_MAJOR_VERSION=36
+ARG L4T_MINOR_VERSION=4
+ARG L4T_PATCH_VERSION=3
+ARG ZED_SDK_MAJOR=5
+ARG ZED_SDK_MINOR=0
+
+RUN if [ "$TARGETARCH" = "arm64" ]; then \
+    apt-get update -y || true && \
+    apt-get install -y --no-install-recommends \
+    lsb-release wget less zstd sudo apt-transport-https \
+    udev=255.4-1ubuntu8 libudev1=255.4-1ubuntu8 --allow-downgrades && \
+    echo "# R${L4T_MAJOR_VERSION} (release), REVISION: ${L4T_MINOR_VERSION}.${L4T_PATCH_VERSION}" > /etc/nv_tegra_release && \
+    wget -q --no-check-certificate -O ZED_SDK_Linux.run https://download.stereolabs.com/zedsdk/${ZED_SDK_MAJOR}.${ZED_SDK_MINOR}/l4t${L4T_MAJOR_VERSION}.${L4T_MINOR_VERSION}/jetsons && \
+    chmod +x ZED_SDK_Linux.run && \
+    ./ZED_SDK_Linux.run silent skip_drivers && \
+    rm -rf /usr/local/zed/resources/* && \
+    rm -rf ZED_SDK_Linux.run && \
+    rm -rf /var/lib/apt/lists/* && \
+    ln -sf /usr/lib/aarch64-linux-gnu/tegra/libv4l2.so.0 /usr/lib/aarch64-linux-gnu/libv4l2.so; \
+    fi
+
 # Install realsense-viewer dependencies
 RUN apt-get update && apt-get install -y \
     libusb-1.0-0-dev \
@@ -126,19 +176,24 @@ RUN if [ "$WITH_GAZEBO" = "true" ]; then \
     && rm -rf /var/lib/apt/lists/*; \
     fi
 
-ENV COLCON_WS=/root/colcon_ws
+ENV COLCON_WS=/root/ros2_ws
 WORKDIR ${COLCON_WS}
 
 RUN mkdir -p ${COLCON_WS}/src && \
     cd ${COLCON_WS}/src && \
-    git clone -b feature-ai-worker https://github.com/ROBOTIS-GIT/dynamixel_hardware_interface.git && \
+    git clone -b jazzy https://github.com/ROBOTIS-GIT/dynamixel_hardware_interface.git && \
     git clone -b jazzy https://github.com/ROBOTIS-GIT/dynamixel_interfaces.git && \
     git clone -b jazzy https://github.com/ROBOTIS-GIT/DynamixelSDK.git && \
     git clone -b jazzy https://github.com/ROBOTIS-GIT/physical_ai_tools.git --recursive && \
     git clone -b jazzy https://github.com/ROBOTIS-GIT/ai_worker.git && \
     git clone -b r/4.56.4 https://github.com/IntelRealSense/realsense-ros.git && \
-    cd realsense-ros && \
-    git checkout cbd8b8487d4c0126bb590822db9469414496e62a
+    cd realsense-ros && git checkout cbd8b8487d4c0126bb590822db9469414496e62a
+
+RUN if [ "$TARGETARCH" = "arm64" ]; then \
+    cd ${COLCON_WS}/src && \
+    git clone https://github.com/stereolabs/zed-ros2-wrapper.git && \
+    cd zed-ros2-wrapper && git checkout 4c8ee060862c9a85d711d68b6a4f1571bfa3dcc9; \
+    fi
 
 # Clone gz_ros2_control only if WITH_GAZEBO is true
 RUN if [ "$WITH_GAZEBO" = "true" ]; then \
@@ -164,10 +219,11 @@ RUN cd ${COLCON_WS}/src/physical_ai_tools/lerobot && \
     pip install --ignore-installed -e .
 
 RUN pip install setuptools==68.1.2
+RUN pip install 'numpy<2'
 
 RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc  && \
     echo "source ${COLCON_WS}/install/setup.bash" >> ~/.bashrc  && \
     echo "alias cb='colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release'" >> ~/.bashrc && \
-    echo "alias leader='ros2 launch ffw_bringup hardware_leader_with_rh.launch.py'" >> ~/.bashrc && \
-    echo "alias follower='ros2 launch ffw_bringup hardware_follower_teleop_with_rh.launch.py'" >> ~/.bashrc && \
-    echo "alias bringup='ros2 launch ffw_bringup ffw_teleop_with_rh.launch.py'" >> ~/.bashrc
+    echo "alias ffw_lg2_leader_ai='ros2 launch ffw_bringup ffw_lg2_leader_ai.launch.py'" >> ~/.bashrc && \
+    echo "alias ffw_bg2_follower_ai='ros2 launch ffw_bringup ffw_bg2_follower_ai.launch.py'" >> ~/.bashrc && \
+    echo "alias ffw_bg2_ai='ros2 launch ffw_bringup ffw_bg2_ai.launch.py'" >> ~/.bashrc
