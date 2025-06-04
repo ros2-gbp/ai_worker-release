@@ -1,5 +1,5 @@
 services:
-  ros2:
+  ai_worker:
     container_name: ai_worker
     build:
       context: .
@@ -23,6 +23,9 @@ services:
       - ./workspace:/workspace
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - /tmp/.docker.xauth:/tmp/.docker.xauth:rw
+      - ../:/root/ros2_ws/src/ai_worker/
+      - ./lerobot/outputs:/root/ros2_ws/src/physical_ai_tools/lerobot/outputs
+      - ./huggingface:/root/.cache/huggingface
     privileged: true
     command: bash
     runtime: nvidia
