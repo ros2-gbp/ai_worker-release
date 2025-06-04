@@ -1,4 +1,5 @@
-import glob
+from glob import glob
+import os
 
 from setuptools import find_packages, setup
 
@@ -13,16 +14,23 @@ author_emails = ', '.join(email for _, email in authors_info)
 
 setup(
     name=package_name,
-    version='1.0.5',
+    version='1.0.8',
     packages=find_packages(exclude=['test']),
     data_files=[
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        ('share/' + package_name, ['ffw.rules']),
-        ('share/' + package_name + '/launch', glob.glob('launch/*.launch.py')),
-        ('share/' + package_name + '/config', glob.glob('config/*.yaml')),
-        ('share/' + package_name + '/worlds', glob.glob('worlds/*.sdf')),
+        ('share/' + package_name + '/launch', glob('launch/*.launch.py')),
+        (os.path.join('share', package_name, 'config/ffw_bg2_rev2_follower'),
+         glob('config/ffw_bg2_rev2_follower/*')),
+        (os.path.join('share', package_name, 'config/ffw_bg2_rev3_follower'),
+         glob('config/ffw_bg2_rev3_follower/*')),
+        (os.path.join('share', package_name, 'config/ffw_bg2_rev4_follower'),
+         glob('config/ffw_bg2_rev4_follower/*')),
+        (os.path.join('share', package_name, 'config/ffw_lg2_leader'),
+         glob('config/ffw_lg2_leader/*')),
+        (os.path.join('share', package_name, 'config/common'), glob('config/common/*')),
+        ('share/' + package_name + '/worlds', glob('worlds/*.sdf')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -42,7 +50,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'init_position = ffw_bringup.init_position:main',
+            'joint_trajectory_executor = ffw_bringup.joint_trajectory_executor:main',
         ],
     },
 )
