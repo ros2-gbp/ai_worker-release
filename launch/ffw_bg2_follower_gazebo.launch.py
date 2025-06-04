@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright 2024 ROBOTIS CO., LTD.
+# Copyright 2025 ROBOTIS CO., LTD.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# Author: Wonho Yoon, Sungho Woo
+# Authors: Sungho Woo, Woojin Wie, Wonho Yun
 
 import os
 from pathlib import Path
@@ -68,8 +68,8 @@ def generate_launch_description():
 
     xacro_file = os.path.join(ffw_description_path,
                               'urdf',
-                              'follower',
-                              'ffw_follower_with_rh.urdf.xacro')
+                              'ffw_bg2_follower',
+                              'ffw_bg2_follower.urdf.xacro')
 
     doc = xacro.process_file(xacro_file, mappings={'use_sim': 'true'})
 
@@ -118,15 +118,15 @@ def generate_launch_description():
         output='screen'
     )
 
-    load_neck_controller = ExecuteProcess(
+    load_head_controller = ExecuteProcess(
         cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
-             'neck_controller'],
+             'head_controller'],
         output='screen'
     )
 
-    load_body_controller = ExecuteProcess(
+    load_lift_controller = ExecuteProcess(
         cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
-             'body_controller'],
+             'lift_controller'],
         output='screen'
     )
 
@@ -159,8 +159,8 @@ def generate_launch_description():
                target_action=load_joint_state_controller,
                on_exit=[load_arm_l_controller,
                         load_arm_r_controller,
-                        load_neck_controller,
-                        load_body_controller],
+                        load_head_controller,
+                        load_lift_controller],
             )
         ),
         bridge,
