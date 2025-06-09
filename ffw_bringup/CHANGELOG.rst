@@ -2,6 +2,11 @@
 Changelog for package ffw_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.0.9 (2025-06-09)
+------------------
+* Modified Gazebo launch file
+* Contributors: Wonho Yun
+
 1.0.8 (2025-06-02)
 ------------------
 * None
