@@ -1,16 +1,4 @@
-ARG TARGETARCH
-
-# Base images for different architectures
-FROM robotis/ros:jazzy-base-torch2.7.0-cuda12.8.0 AS base-arm64
-FROM robotis/ros:jazzy-base-torch2.7.0-cuda12.8.0 AS base-amd64
-
-# Select the appropriate base image based on TARGETARCH
-FROM base-${TARGETARCH} AS base
-
-#################################
-#   Librealsense Builder Stage  #
-#################################
-FROM base AS librealsense-builder
+FROM robotis/ros:jazzy-ros-base-torch2.7.0-cuda12.8.0 AS librealsense-builder
 
 ARG TARGETARCH
 
@@ -20,20 +8,6 @@ ARG TARGETARCH
 
 # To avoid waiting for input during package installation
 ENV DEBIAN_FRONTEND=noninteractive
-
-RUN rm /etc/apt/sources.list.d/ros2.list || true && \
-    rm /usr/share/keyrings/ros-archive-keyring.gpg || true && \
-    rm /etc/apt/sources.list.d/ros2-latest.list || true && \
-    rm /usr/share/keyrings/ros2-latest-archive-keyring.gpg || true
-
-RUN apt-get update \
-  && apt-get install -y ca-certificates curl
-
-RUN export ROS_APT_SOURCE_VERSION=$(curl -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | grep -F "tag_name" | awk -F\" '{print $4}') ;\
-    curl -L -s -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(. /etc/os-release && echo $VERSION_CODENAME)_all.deb" \
-    && apt-get update \
-    && apt-get install /tmp/ros2-apt-source.deb \
-    && rm -f /tmp/ros2-apt-source.deb
 
 # Builder dependencies installation
 RUN apt-get update || true \
@@ -89,10 +63,7 @@ RUN if [ "$TARGETARCH" = "arm64" ]; then \
     cp -r /opt/venv/lib/python3.12/site-packages/pyrealsense2 /usr/local/lib/python3.12/dist-packages/; \
     fi
 
-###################################
-#   AI Worker Base Image Stage    #
-###################################
-FROM base
+FROM robotis/ros:jazzy-ros-base-torch2.7.0-cuda12.8.0 AS ai-worker
 
 ARG TARGETARCH
 
@@ -112,20 +83,6 @@ ENV PYTHONPATH=$PYTHONPATH:/usr/local/lib
 
 # Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
-
-RUN rm /etc/apt/sources.list.d/ros2.list || true && \
-    rm /usr/share/keyrings/ros-archive-keyring.gpg || true && \
-    rm /etc/apt/sources.list.d/ros2-latest.list || true && \
-    rm /usr/share/keyrings/ros2-latest-archive-keyring.gpg || true
-
-RUN apt-get update \
-  && apt-get install -y ca-certificates curl
-
-RUN export ROS_APT_SOURCE_VERSION=$(curl -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | grep -F "tag_name" | awk -F\" '{print $4}') ;\
-    curl -L -s -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(. /etc/os-release && echo $VERSION_CODENAME)_all.deb" \
-    && apt-get update \
-    && apt-get install /tmp/ros2-apt-source.deb \
-    && rm -f /tmp/ros2-apt-source.deb
 
 # Install ZED SDK
 ARG L4T_MAJOR_VERSION=36
@@ -149,32 +106,14 @@ RUN if [ "$TARGETARCH" = "arm64" ]; then \
     ln -sf /usr/lib/aarch64-linux-gnu/tegra/libv4l2.so.0 /usr/lib/aarch64-linux-gnu/libv4l2.so; \
     fi
 
-# Install realsense-viewer dependencies
+# Install realsense dependencies
 RUN apt-get update && apt-get install -y \
     libusb-1.0-0-dev \
     libglfw3-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-# Define build argument for Gazebo support
-ARG WITH_GAZEBO=true
-
-# Install common system dependencies
-RUN apt-get update && apt-get install -y \
-    ros-${ROS_DISTRO}-hardware-interface \
-    ros-${ROS_DISTRO}-controller-manager \
-    ros-${ROS_DISTRO}-ros2-controllers \
-    ros-${ROS_DISTRO}-tf-transformations \
-    ros-${ROS_DISTRO}-pal-statistics \
+    ffmpeg \
     vim \
     nano \
-    && apt-get install -y ros-${ROS_DISTRO}-moveit --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
-
-# Install Gazebo dependencies conditionally
-RUN if [ "$WITH_GAZEBO" = "true" ]; then \
-    apt-get update && apt-get install -y ros-${ROS_DISTRO}-gz* \
-    && rm -rf /var/lib/apt/lists/*; \
-    fi
 
 ENV COLCON_WS=/root/ros2_ws
 WORKDIR ${COLCON_WS}
@@ -195,35 +134,34 @@ RUN if [ "$TARGETARCH" = "arm64" ]; then \
     cd zed-ros2-wrapper && git checkout 4c8ee060862c9a85d711d68b6a4f1571bfa3dcc9; \
     fi
 
-# Clone gz_ros2_control only if WITH_GAZEBO is true
-RUN if [ "$WITH_GAZEBO" = "true" ]; then \
-    cd ${COLCON_WS}/src && \
-    git clone -b jazzy https://github.com/ros-controls/gz_ros2_control; \
-    fi
-
 RUN cd ${COLCON_WS} && \
     apt-get update && \
     rosdep update && \
-    rosdep install -i --from-path src --rosdistro $ROS_DISTRO --skip-keys="librealsense2 dynamixel_hardware_interface dynamixel_interfaces dynamixel_sdk physical_ai_tools ai_worker gz_ros2_control" -y && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash && \
-    cd ${COLCON_WS} && \
-    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release"
-
-RUN apt-get update && \
-    apt-get install -y ffmpeg && \
+    rosdep install -i --from-path src --rosdistro $ROS_DISTRO --skip-keys="librealsense2 dynamixel_hardware_interface dynamixel_interfaces dynamixel_sdk physical_ai_tools ai_worker" -y && \
     rm -rf /var/lib/apt/lists/*
 
 RUN cd ${COLCON_WS}/src/physical_ai_tools/lerobot && \
     pip install --ignore-installed -e .
 
+RUN if [ "$TARGETARCH" = "arm64" ]; then \
+    echo 'export PYTHONPATH=${COLCON_WS}/src/physical_ai_tools/lerobot:$PYTHONPATH' >> /root/.bashrc && \
+    export PYTHONPATH=${COLCON_WS}/src/physical_ai_tools/lerobot:$PYTHONPATH; \
+    fi
+
 RUN pip install setuptools==68.1.2
 RUN pip install 'numpy<2'
+
+RUN bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash && \
+    cd ${COLCON_WS} && \
+    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release"
 
 RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc  && \
     echo "source ${COLCON_WS}/install/setup.bash" >> ~/.bashrc  && \
     echo "alias cb='colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release'" >> ~/.bashrc && \
     echo "alias ffw_lg2_leader_ai='ros2 launch ffw_bringup ffw_lg2_leader_ai.launch.py'" >> ~/.bashrc && \
     echo "alias ffw_bg2_follower_ai='ros2 launch ffw_bringup ffw_bg2_follower_ai.launch.py'" >> ~/.bashrc && \
-    echo "alias ffw_bg2_ai='ros2 launch ffw_bringup ffw_bg2_ai.launch.py'" >> ~/.bashrc
+    echo "alias ffw_sg2_follower_ai='ros2 launch ffw_bringup ffw_sg2_follower_ai.launch.py'" >> ~/.bashrc && \
+    echo "alias ffw_bg2_ai='ros2 launch ffw_bringup ffw_bg2_ai.launch.py'" >> ~/.bashrc && \
+    echo "alias ffw_sg2_ai='ros2 launch ffw_bringup ffw_sg2_ai.launch.py'" >> ~/.bashrc && \
+    echo "alias ai_server='ros2 launch physical_ai_server physical_ai_server_bringup.launch.py'" >> ~/.bashrc && \
+    echo "export ROS_DOMAIN_ID=30" >> ~/.bashrc
