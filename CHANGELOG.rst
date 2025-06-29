@@ -2,6 +2,30 @@
 Changelog for package ffw_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.4 (2025-06-27)
+------------------
+* None
+
+1.1.3 (2025-06-26)
+------------------
+* Modified jog scale for ffw_lg2_leader
+* Added dependencies to the package.xml file for image_transport_plugins
+* Contributors: Woojin Wie
+
+1.1.2 (2025-06-26)
+------------------
+* Added dependencies to the package.xml file
+* Contributors: Woojin Wie
+
+1.1.1 (2025-06-26)
+------------------
+* None
+
+1.1.0 (2025-06-16)
+------------------
+* Support ffw_sg2_rev1 Model
+* Contributors: Woojin Wie
+
 1.0.9 (2025-06-09)
 ------------------
 * Modified Gazebo launch file
