@@ -2,6 +2,29 @@
 Changelog for package ffw_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.4 (2025-06-27)
+------------------
+* None
+
+1.1.3 (2025-06-26)
+------------------
+* None
+
+1.1.2 (2025-06-26)
+------------------
+* Added dependencies to the package.xml file
+* Contributors: Woojin Wie
+
+1.1.1 (2025-06-26)
+------------------
+* Added Current Limit parameter to the ros2_control xacro file for ffw_sg2_rev1
+* Contributors: Woojin Wie
+
+1.1.0 (2025-06-16)
+------------------
+* Support ffw_sg2_rev1 Model
+* Contributors: Woojin Wie
+
 1.0.9 (2025-06-09)
 ------------------
 * Updated urdf files for ffw_bg2_rev4
