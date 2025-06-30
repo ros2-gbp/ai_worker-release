@@ -2,6 +2,11 @@
 Changelog for package ffw_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.5 (2025-06-30)
+------------------
+* Updated ros2_control xacro file for ffw_bg2_rev2_follower
+* Contributors: Woojin Wie
+
 1.1.4 (2025-06-27)
 ------------------
 * None
