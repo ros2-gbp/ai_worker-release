@@ -2,6 +2,12 @@
 Changelog for package ffw
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.6 (2025-07-07)
+------------------
+* Updated ros2_control xacro file for ffw_bg2_rev4_follower
+* Fix header file name for tf2
+* Contributors: Woojin Wie
+
 1.1.5 (2025-06-30)
 ------------------
 * Updated ros2_control xacro file for ffw_bg2_rev2_follower
