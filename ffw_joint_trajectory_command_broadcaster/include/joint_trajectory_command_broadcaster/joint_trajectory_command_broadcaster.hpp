@@ -30,6 +30,7 @@
 #include "sensor_msgs/msg/joint_state.hpp"
 #include "urdf/model.h"
 #include "trajectory_msgs/msg/joint_trajectory.hpp"
+#include "rclcpp/subscription.hpp"
 
 namespace joint_trajectory_command_broadcaster
 {
@@ -92,6 +93,9 @@ protected:
   bool init_joint_data();
   void init_joint_trajectory_msg();
   bool use_all_available_interfaces() const;
+  void joint_states_callback(const sensor_msgs::msg::JointState::SharedPtr msg);
+  bool check_joints_synced() const;
+  double calculate_mean_error() const;
 
 protected:
   // Optional parameters
@@ -110,6 +114,12 @@ protected:
 
   urdf::Model model_;
   bool is_model_loaded_ = false;
+
+  // Follower joint states tracking
+  std::shared_ptr<rclcpp::Subscription<sensor_msgs::msg::JointState>> joint_states_subscriber_;
+  std::unordered_map<std::string, double> follower_joint_positions_;
+  bool joints_synced_ = false;
+  bool first_publish_ = true;
 };
 
 }  // namespace joint_trajectory_command_broadcaster
