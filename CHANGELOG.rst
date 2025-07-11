@@ -2,6 +2,11 @@
 Changelog for package ffw_joint_trajectory_command_broadcaster
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.7 (2025-07-11)
+------------------
+* Added slow start feature
+* Contributors: Woojin Wie
+
 1.1.6 (2025-07-07)
 ------------------
 * None
