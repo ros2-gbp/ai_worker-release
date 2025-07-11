@@ -2,6 +2,10 @@
 Changelog for package ffw_swerve_drive_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.7 (2025-07-11)
+------------------
+* None
+
 1.1.6 (2025-07-07)
 ------------------
 * Fix header file name for tf2
