@@ -20,12 +20,17 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <functional>
+#include <cmath>
+#include <algorithm>
+#include <iterator>
 
 #include "hardware_interface/types/hardware_interface_type_values.hpp"
 #include "rclcpp/qos.hpp"
 #include "rclcpp/time.hpp"
 #include "std_msgs/msg/header.hpp"
 #include "trajectory_msgs/msg/joint_trajectory.hpp"
+#include "sensor_msgs/msg/joint_state.hpp"
 #include "urdf/model.h"
 
 namespace rclcpp_lifecycle
@@ -116,6 +121,17 @@ controller_interface::CallbackReturn JointTrajectoryCommandBroadcaster::on_confi
     realtime_joint_trajectory_publisher_ =
       std::make_shared<realtime_tools::RealtimePublisher<trajectory_msgs::msg::JointTrajectory>>(
       joint_trajectory_publisher_);
+
+    // Create subscriber for follower joint states
+    joint_states_subscriber_ = get_node()->create_subscription<sensor_msgs::msg::JointState>(
+      params_.follower_joint_states_topic, rclcpp::SystemDefaultsQoS(),
+      std::bind(&JointTrajectoryCommandBroadcaster::joint_states_callback, this,
+        std::placeholders::_1));
+
+    RCLCPP_INFO(
+      get_node()->get_logger(),
+      "Subscribed to follower joint states topic: %s",
+      params_.follower_joint_states_topic.c_str());
   } catch (const std::exception & e) {
     // get_node() may throw, logging raw here
     fprintf(stderr, "Exception thrown during init stage with message: %s \n", e.what());
@@ -263,6 +279,75 @@ double get_value(
   }
 }
 
+void JointTrajectoryCommandBroadcaster::joint_states_callback(
+  const sensor_msgs::msg::JointState::SharedPtr msg)
+{
+  // Update follower joint positions
+  for (size_t i = 0; i < msg->name.size(); ++i) {
+    if (i < msg->position.size()) {
+      follower_joint_positions_[msg->name[i]] = msg->position[i];
+    }
+  }
+
+  // Debug logging (only log occasionally to avoid spam)
+  static int callback_count = 0;
+  if (++callback_count % 100 == 0) {
+    RCLCPP_DEBUG(get_node()->get_logger(),
+      "Received follower joint states for %zu joints", msg->name.size());
+  }
+}
+
+double JointTrajectoryCommandBroadcaster::calculate_mean_error() const
+{
+  // Check if we have received any follower joint states
+  if (follower_joint_positions_.empty()) {
+    return std::numeric_limits<double>::max();  // Return max error if no follower data
+  }
+
+  double total_error = 0.0;
+  int valid_joints = 0;
+
+  // Calculate mean error across all joints
+  for (const auto & joint_name : joint_names_) {
+    auto follower_it = follower_joint_positions_.find(joint_name);
+    if (follower_it == follower_joint_positions_.end()) {
+      continue;  // Skip joints not available in follower
+    }
+
+    double leader_pos = get_value(name_if_value_mapping_, joint_name, HW_IF_POSITION);
+    if (std::isnan(leader_pos)) {
+      continue;  // Skip joints without valid leader position
+    }
+
+    // Apply reverse and offset to leader position for comparison
+    if (std::find(params_.reverse_joints.begin(), params_.reverse_joints.end(), joint_name) !=
+      params_.reverse_joints.end())
+    {
+      leader_pos = -leader_pos;
+    }
+
+    // Find the offset for this joint
+    auto joint_it = std::find(joint_names_.begin(), joint_names_.end(), joint_name);
+    if (joint_it != joint_names_.end()) {
+      size_t joint_index = std::distance(joint_names_.begin(), joint_it);
+      if (joint_index < joint_offsets_.size()) {
+        leader_pos += joint_offsets_[joint_index];
+      }
+    }
+
+    total_error += std::abs(leader_pos - follower_it->second);
+    valid_joints++;
+  }
+
+  return valid_joints > 0 ? total_error / valid_joints : std::numeric_limits<double>::max();
+}
+
+bool JointTrajectoryCommandBroadcaster::check_joints_synced() const
+{
+  double mean_error = calculate_mean_error();
+  return mean_error <= params_.sync_threshold;
+}
+
 controller_interface::return_type JointTrajectoryCommandBroadcaster::update(
   const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
 {
@@ -275,6 +360,25 @@ controller_interface::return_type JointTrajectoryCommandBroadcaster::update(
     auto value = state_interface.get_optional();
     if (value) {
       name_if_value_mapping_[state_interface.get_prefix_name()][interface_name] = *value;
+    }
+  }
+
+  // Calculate mean error and check if joints are synced
+  double mean_error = calculate_mean_error();
+  bool current_synced = check_joints_synced();
+
+  // Update sync status and handle first publish
+  if (first_publish_) {
+    joints_synced_ = false;
+    first_publish_ = false;
+    RCLCPP_INFO(get_node()->get_logger(),
+        "First publish - using adaptive time_from_start based on error");
+  } else {
+    // Once synced, stay synced permanently
+    if (!joints_synced_ && current_synced) {
+      joints_synced_ = true;
+      RCLCPP_INFO(get_node()->get_logger(),
+          "Joints synced for the first time - switching to immediate time_from_start permanently");
     }
   }
 
@@ -309,8 +413,24 @@ controller_interface::return_type JointTrajectoryCommandBroadcaster::update(
       traj_msg.points[0].positions[i] = pos_value;
     }
 
-    // Optionally set velocities/accelerations/time_from_start if needed
-    traj_msg.points[0].time_from_start = rclcpp::Duration(0, 0);  // immediate
+    // Set time_from_start based on sync status and mean error
+    if (joints_synced_) {
+      traj_msg.points[0].time_from_start = rclcpp::Duration(0, 0);  // immediate when synced
+    } else {
+      // Adaptive timing based on mean error using parameters
+      if(mean_error < params_.min_error) {
+        mean_error = 0;
+      }
+
+      double error_ratio = std::min(mean_error / params_.max_error, 1.0);
+      // Corrected logic: small error -> small delay, large error -> large delay
+      double adaptive_delay = params_.min_delay + (params_.max_delay - params_.min_delay) *
+        error_ratio;
+
+      // Convert to nanoseconds
+      int32_t delay_ns = static_cast<int32_t>(adaptive_delay * 1e9);
+      traj_msg.points[0].time_from_start = rclcpp::Duration(0, delay_ns);
+    }
 
     realtime_joint_trajectory_publisher_->unlockAndPublish();
   }
