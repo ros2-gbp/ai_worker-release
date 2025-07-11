@@ -2,6 +2,11 @@
 Changelog for package ffw
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.7 (2025-07-11)
+------------------
+* Added slow start feature for joint_trajectory_command_broadcaster
+* Contributors: Woojin Wie
+
 1.1.6 (2025-07-07)
 ------------------
 * Updated ros2_control xacro file for ffw_bg2_rev4_follower
