@@ -37,6 +37,15 @@
 namespace joystick_controller
 {
 
+// Structure to hold joystick values for better organization
+struct JoystickValues
+{
+  double left_x = 0.0;
+  double left_y = 0.0;
+  double right_x = 0.0;
+  double right_y = 0.0;
+};
+
 class JoystickController : public controller_interface::ControllerInterface
 {
 public:
@@ -82,6 +91,30 @@ public:
 
 protected:
   void joint_states_callback(const sensor_msgs::msg::JointState::SharedPtr msg);
+
+  // Helper methods for better code organization
+  double normalize_joystick_value(double raw_adc, bool is_tact_switch) const;
+  std::vector<double> read_and_normalize_sensor_values(size_t sensor_idx) const;
+  void update_joystick_values(
+    const std::string & sensor_name,
+    const std::vector<double> & normalized_values,
+    JoystickValues & joystick_values,
+    bool & left_tact_pressed,
+    bool & right_tact_pressed) const;
+  void update_last_active_positions(const std::vector<std::string> & controlled_joints);
+  std::vector<double> calculate_joint_positions(
+    const std::vector<std::string> & controlled_joints,
+    const std::vector<double> & normalized_values,
+    const std::string & sensor_name,
+    bool swerve_mode,
+    const JoystickValues & joystick_values) const;
+  void publish_joint_trajectory(
+    const std::vector<std::string> & controlled_joints,
+    const std::vector<double> & positions,
+    const std::string & sensor_name);
+  void publish_cmd_vel(bool swerve_mode, const JoystickValues & joystick_values);
+  void publish_joystick_values();
+  void handle_mode_switching(bool left_tact_pressed, bool right_tact_pressed);
 
   std::vector<std::string> sensorxel_joy_names_;
   std::vector<std::string> state_interface_types_ = {"JOYSTICK X VALUE", "JOYSTICK Y VALUE",
