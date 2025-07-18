@@ -2,6 +2,10 @@
 Changelog for package ffw_joystick_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.9 (2025-07-18)
+------------------
+* None
+
 1.1.8 (2025-07-14)
 ------------------
 * Modified joystick controller to enable lift control while in swerve mode

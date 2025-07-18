@@ -2,6 +2,12 @@
 Changelog for package ffw_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.9 (2025-07-18)
+------------------
+* Fixed file path for rviz config file
+* Added error code reading feature for Dynamixel
+* Contributors: Woojin Wie
+
 1.1.8 (2025-07-14)
 ------------------
 * None
