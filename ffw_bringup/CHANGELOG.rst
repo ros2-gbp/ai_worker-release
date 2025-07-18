@@ -2,6 +2,12 @@
 Changelog for package ffw_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.9 (2025-07-18)
+------------------
+* Added Swerve Steer initialization feature
+* Fixed Gazebo simulation issue
+* Contributors: Woojin Wie
+
 1.1.8 (2025-07-14)
 ------------------
 * None
