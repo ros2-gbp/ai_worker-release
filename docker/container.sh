@@ -33,7 +33,9 @@ start_container() {
     echo "Starting ai_worker container..."
 
     # Copy udev rule for FTDI (U2D2)
-    echo 'KERNEL=="ttyUSB*", DRIVERS=="ftdi_sio", MODE="0666", ATTR{device/latency_timer}="1"' | sudo tee /etc/udev/rules.d/99-u2d2.rules > /dev/null
+    sudo cp "${SCRIPT_DIR}/99-u2d2.rules" /etc/udev/rules.d/99-u2d2.rules
+    # Copy udev rules for AI Worker (follower/leader symlinks)
+    sudo cp "${SCRIPT_DIR}/99-ai-worker.rules" /etc/udev/rules.d/99-ai-worker.rules
 
     # Reload udev rules
     echo "Reloading udev rules..."

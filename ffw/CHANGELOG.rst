@@ -2,6 +2,14 @@
 Changelog for package ffw
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.9 (2025-07-18)
+------------------
+* Added robot manager ros2 controller
+* Added Swerve Steer initialization feature
+* Fixed Gazebo simulation issue
+* Added error code reading feature for Dynamixel
+* Contributors: Woojin Wie
+
 1.1.8 (2025-07-14)
 ------------------
 * Modified joystick controller to enable lift control while in swerve mode
