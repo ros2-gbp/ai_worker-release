@@ -29,7 +29,7 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
     declared_arguments = [
-        DeclareLaunchArgument('start_rviz', default_value='true',
+        DeclareLaunchArgument('start_rviz', default_value='false',
                               description='Whether to execute rviz2'),
         DeclareLaunchArgument('use_sim', default_value='false',
                               description='Start robot in Gazebo simulation.'),
@@ -80,7 +80,7 @@ def generate_launch_description():
         'ffw_sg2_follower_ai_hardware_controller.yaml'
     ])
     rviz_config_file = PathJoinSubstitution([
-        FindPackageShare('ffw_description'), 'rviz', 'ffw.rviz'
+        FindPackageShare('ffw_description'), 'rviz', 'ffw_sg2.rviz'
     ])
 
     robot_description = {'robot_description': robot_description_content}
@@ -91,16 +91,6 @@ def generate_launch_description():
         parameters=[robot_description, controller_manager_config],
         output='both',
         condition=UnlessCondition(use_sim),
-        remappings=[
-            ('/arm_l_controller/joint_trajectory',
-             '/leader/joint_trajectory_command_broadcaster_left/joint_trajectory'),
-            ('/arm_r_controller/joint_trajectory',
-             '/leader/joint_trajectory_command_broadcaster_right/joint_trajectory'),
-            ('/head_controller/joint_trajectory',
-             '/leader/joystick_controller_left/joint_trajectory'),
-            ('/lift_controller/joint_trajectory',
-             '/leader/joystick_controller_right/joint_trajectory')
-        ]
     )
 
     robot_state_pub_node = Node(
@@ -121,7 +111,7 @@ def generate_launch_description():
     joint_state_broadcaster_spawner = Node(
         package='controller_manager',
         executable='spawner',
-        arguments=['joint_state_broadcaster', '--controller-manager', '/controller_manager'],
+        arguments=['joint_state_broadcaster'],
         output='screen'
     )
 
@@ -129,13 +119,56 @@ def generate_launch_description():
         package='controller_manager',
         executable='spawner',
         arguments=[
+            '--controller-ros-args',
+            '-r /arm_l_controller/joint_trajectory:='
+            '/leader/joint_trajectory_command_broadcaster_left/joint_trajectory',
+            '--controller-ros-args',
+            '-r /arm_r_controller/joint_trajectory:='
+            '/leader/joint_trajectory_command_broadcaster_right/joint_trajectory',
+            '--controller-ros-args',
+            '-r /head_controller/joint_trajectory:='
+            '/leader/joystick_controller_left/joint_trajectory',
+            '--controller-ros-args',
+            '-r /lift_controller/joint_trajectory:='
+            '/leader/joystick_controller_right/joint_trajectory',
             'arm_l_controller',
             'arm_r_controller',
             'head_controller',
             'lift_controller',
-            'swerve_drive_controller'
+            'ffw_robot_manager'
         ],
         parameters=[robot_description],
+    )
+
+    # Separate spawner for swerve_steering_initial_position_controller
+    swerve_steering_initial_position_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['swerve_steering_initial_position_controller'],
+        parameters=[robot_description],
+    )
+
+    # Unspawner for swerve_steering_initial_position_controller
+    swerve_steering_initial_position_unspawner = Node(
+        package='controller_manager',
+        executable='unspawner',
+        arguments=['swerve_steering_initial_position_controller'],
+        output='screen',
+    )
+
+    # Spawner for swerve_drive_controller
+    swerve_drive_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['swerve_drive_controller'],
+        parameters=[robot_description],
+        output='screen',
+    )
+
+    # Add a TimerAction to delay swerve_drive_spawner by 5 seconds after unspawning
+    swerve_drive_spawner_delayed = TimerAction(
+        period=5.0,
+        actions=[swerve_drive_spawner],
     )
 
     delay_rviz_after_joint_state_broadcaster_spawner = RegisterEventHandler(
@@ -180,6 +213,13 @@ def generate_launch_description():
         parameters=[trajectory_params_file],
         output='screen',
     )
+    joint_trajectory_executor_swerve_steering = Node(
+        package='ffw_bringup',
+        executable='joint_trajectory_executor',
+        name='swerve_steering_joint_trajectory_executor',
+        parameters=[trajectory_params_file],
+        output='screen',
+    )
 
     init_position_event_handler = RegisterEventHandler(
         event_handler=OnProcessExit(
@@ -188,7 +228,22 @@ def generate_launch_description():
                 joint_trajectory_executor_left,
                 joint_trajectory_executor_right,
                 joint_trajectory_executor_head,
-                joint_trajectory_executor_lift
+                joint_trajectory_executor_lift,
+                joint_trajectory_executor_swerve_steering
+            ]
+        ),
+        condition=IfCondition(init_position)
+    )
+
+    # Event handler to unspawn swerve_steering_initial_position_controller and
+    # spawn swerve_drive_controller
+    # when joint_trajectory_executor_swerve_steering is done
+    swerve_controller_switch_event_handler = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=joint_trajectory_executor_swerve_steering,
+            on_exit=[
+                swerve_steering_initial_position_unspawner,
+                swerve_drive_spawner_delayed
             ]
         ),
         condition=IfCondition(init_position)
@@ -215,7 +270,9 @@ def generate_launch_description():
             joint_state_broadcaster_spawner,
             delay_rviz_after_joint_state_broadcaster_spawner,
             robot_controller_spawner,
+            swerve_steering_initial_position_spawner,
             init_position_event_handler,
+            swerve_controller_switch_event_handler,
             camera_timer_20s,
             camera_timer_10s,
         ]
