@@ -17,14 +17,6 @@
 
   <xacro:include filename="$(find ffw_description)/gazebo/$(arg model)/ffw_sg2_follower.gazebo.xacro" />
 
-  <link name="world"/>
-
-  <joint name="$(arg prefix)world_fixed" type="fixed">
-    <parent link="world"/>
-    <child link="$(arg prefix)base_link"/>
-    <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
-  </joint>
-
   <link name="$(arg prefix)base_link">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -97,7 +89,7 @@
       <child link="$(arg prefix)left_wheel_steer_link"/>
       <origin xyz="0.1371 0.2554 0.27555" rpy="0 0 0"/>
       <axis xyz="0 0 1" />
-      <limit velocity="4.8" effort="1" lower="${-pi*6.0}" upper="${pi*6.0}" />
+      <limit velocity="9999.0" effort="9999.0" lower="${-pi*6.0}" upper="${pi*6.0}" />
   </joint>
   <link name="$(arg prefix)left_wheel_steer_link">
     <visual>
@@ -123,12 +115,12 @@
        izz="1.683594000e-03" />
     </inertial>
   </link>
-  <joint name="$(arg prefix)left_wheel_drive" type="revolute">
+  <joint name="$(arg prefix)left_wheel_drive" type="continuous">
       <parent link="$(arg prefix)left_wheel_steer_link"/>
       <child link="$(arg prefix)left_wheel_drive_link"/>
       <origin xyz="0 0 -0.18905" rpy="0 0 0"/>
       <axis xyz="0 1 0" />
-      <limit velocity="4.8" effort="1" lower="${-pi*6.0}" upper="${pi*6.0}" />
+      <limit velocity="9999.0" effort="9999.0"/>
   </joint>
   <link name="$(arg prefix)left_wheel_drive_link">
     <visual>
@@ -160,7 +152,7 @@
       <child link="$(arg prefix)right_wheel_steer_link"/>
       <origin xyz="0.1371 -0.2554 0.27555" rpy="0 0 0"/>
       <axis xyz="0 0 1" />
-      <limit velocity="4.8" effort="1" lower="${-pi*6.0}" upper="${pi*6.0}" />
+      <limit velocity="9999.0" effort="9999.0" lower="${-pi*6.0}" upper="${pi*6.0}" />
   </joint>
   <link name="$(arg prefix)right_wheel_steer_link">
     <visual>
@@ -186,12 +178,12 @@
        izz="1.683595100e-03" />
     </inertial>
   </link>
-  <joint name="$(arg prefix)right_wheel_drive" type="revolute">
+  <joint name="$(arg prefix)right_wheel_drive" type="continuous">
       <parent link="$(arg prefix)right_wheel_steer_link"/>
       <child link="$(arg prefix)right_wheel_drive_link"/>
       <origin xyz="0 0 -0.18905" rpy="0 0 0"/>
       <axis xyz="0 1 0" />
-      <limit velocity="4.8" effort="1" lower="${-pi*6.0}" upper="${pi*6.0}" />
+      <limit velocity="9999.0" effort="9999.0"/>
   </joint>
   <link name="$(arg prefix)right_wheel_drive_link">
     <visual>
@@ -223,7 +215,7 @@
       <child link="$(arg prefix)rear_wheel_steer_link"/>
       <origin xyz="-0.2899 0 0.27555" rpy="0 0 0"/>
       <axis xyz="0 0 1" />
-      <limit velocity="4.8" effort="1" lower="${-pi*6.0}" upper="${pi*6.0}" />
+      <limit velocity="9999.0" effort="9999.0" lower="${-pi*6.0}" upper="${pi*6.0}" />
   </joint>
   <link name="$(arg prefix)rear_wheel_steer_link">
     <visual>
@@ -249,12 +241,12 @@
        izz="1.683595100e-03" />
     </inertial>
   </link>
-  <joint name="$(arg prefix)rear_wheel_drive" type="revolute">
+  <joint name="$(arg prefix)rear_wheel_drive" type="continuous">
       <parent link="$(arg prefix)rear_wheel_steer_link"/>
       <child link="$(arg prefix)rear_wheel_drive_link"/>
       <origin xyz="0 0 -0.18905" rpy="0 0 0"/>
       <axis xyz="0 1 0" />
-      <limit velocity="4.8" effort="1" lower="${-pi*6.0}" upper="${pi*6.0}" />
+      <limit velocity="9999.0" effort="9999.0"/>
   </joint>
   <link name="$(arg prefix)rear_wheel_drive_link">
     <visual>
