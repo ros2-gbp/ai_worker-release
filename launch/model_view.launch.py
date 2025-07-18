@@ -68,7 +68,7 @@ def generate_launch_description():
         [
             FindPackageShare('ffw_description'),
             'rviz',
-            'ffw.rviz'
+            'ffw_bg2.rviz'
         ]
     )
 
