@@ -2,6 +2,16 @@
 Changelog for package ffw
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.10 (2025-07-22)
+-------------------
+* Added start/pause feature for ffw_joint_trajectory_command_broadcaster
+* Merged two joint_trajectory_command_broadcaster into one for ffw_lg2_leader
+* Added ffw_robot_manager package in meta package
+* Added URDF for ZED camera
+* Modified MoveIt files
+* Updated Dockerfile
+* Contributors: Wonho Yun, Woojin Wie
+
 1.1.9 (2025-07-18)
 ------------------
 * Added robot manager ros2 controller
