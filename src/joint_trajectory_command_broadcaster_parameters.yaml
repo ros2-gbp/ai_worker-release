@@ -1,41 +1,4 @@
 joint_trajectory_command_broadcaster:
-  use_local_topics: {
-    type: bool,
-    default_value: false,
-    description: "Defining if joint trajectory messages should be published into local namespace, e.g., ``/my_broadcaster/joint_trajectory``."
-  }
-  joints: {
-    type: string_array,
-    default_value: [],
-    description: "Parameter to support broadcasting of only specific joints and interfaces.
-    It has to be used in combination with the ``interfaces`` parameter.
-    If either ``joints`` or ``interfaces`` is left empty, all available state interfaces will be
-    published.
-    Joint trajectory broadcaster asks for access to all defined interfaces on all defined joints."
-  }
-  extra_joints: {
-    type: string_array,
-    default_value: [],
-    description: "Names of extra joints to be added to joint trajectory with position set to 0."
-  }
-  interfaces: {
-    type: string_array,
-    default_value: [],
-    description: "Parameter to support broadcasting of only specific joints and interfaces.
-    It has to be used in combination with the ``joints`` parameter.
-    If either ``joints`` or ``interfaces`` is left empty, all available state interfaces will be
-    published."
-  }
-  reverse_joints: {
-    type: string_array,
-    default_value: [],
-    description: "Names of joints to be reversed."
-  }
-  offsets: {
-    type: double_array,
-    default_value: [],
-    description: "Offsets of joints to be added to the joint positions."
-  }
   map_interface_to_joint_state:
     position: {
       type: string,
@@ -77,4 +40,49 @@ joint_trajectory_command_broadcaster:
     type: double,
     default_value: 0.4,
     description: "Maximum delay (in seconds) for adaptive timing when joints are not synced."
+  }
+  left_joints: {
+    type: string_array,
+    default_value: [],
+    description: "Joint names for left arm group."
+  }
+  left_offsets: {
+    type: double_array,
+    default_value: [],
+    description: "Offsets for left arm joints."
+  }
+  left_reverse_joints: {
+    type: string_array,
+    default_value: [],
+    description: "Reverse joints for left arm group."
+  }
+  right_joints: {
+    type: string_array,
+    default_value: [],
+    description: "Joint names for right arm group."
+  }
+  right_offsets: {
+    type: double_array,
+    default_value: [],
+    description: "Offsets for right arm joints."
+  }
+  right_reverse_joints: {
+    type: string_array,
+    default_value: [],
+    description: "Reverse joints for right arm group."
+  }
+  trigger_threshold: {
+    type: double,
+    default_value: -0.5,
+    description: "Threshold value for gripper trigger joints to activate auto mode. Both gripper triggers must exceed this value."
+  }
+  trigger_duration: {
+    type: double,
+    default_value: 2.0,
+    description: "Duration (in seconds) that triggers must be held above threshold to toggle auto mode."
+  }
+  trigger_sign: {
+    type: double,
+    default_value: -1.0,
+    description: "Sign of the trigger joints. 1.0 for positive sign, -1.0 for negative sign."
   }
