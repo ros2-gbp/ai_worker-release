@@ -67,8 +67,7 @@ def generate_launch_description():
         package='controller_manager',
         executable='spawner',
         arguments=[
-            'joint_trajectory_command_broadcaster_left',
-            'joint_trajectory_command_broadcaster_right',
+            'joint_trajectory_command_broadcaster',
             'spring_actuator_controller_left',
             'spring_actuator_controller_right',
             'joystick_controller',
