@@ -7,10 +7,7 @@
       joint_state_broadcaster:
         type: joint_state_broadcaster/JointStateBroadcaster
 
-      joint_trajectory_command_broadcaster_left:
-        type: joint_trajectory_command_broadcaster/JointTrajectoryCommandBroadcaster
-
-      joint_trajectory_command_broadcaster_right:
+      joint_trajectory_command_broadcaster:
         type: joint_trajectory_command_broadcaster/JointTrajectoryCommandBroadcaster
 
       spring_actuator_controller_left:
@@ -23,9 +20,9 @@
         type: joystick_controller/JoystickController
 
 /**:
-  joint_trajectory_command_broadcaster_left:
+  joint_trajectory_command_broadcaster:
     ros__parameters:
-      joints:
+      left_joints:
         - arm_l_joint1
         - arm_l_joint2
         - arm_l_joint3
@@ -34,9 +31,7 @@
         - arm_l_joint6
         - arm_l_joint7
         - gripper_l_joint1
-      interfaces:
-        - position
-      offsets:
+      left_offsets:
         - 0.0
         - 0.0
         - 0.0
@@ -45,13 +40,7 @@
         - 0.0
         - 0.0
         - 0.3
-      action_monitor_rate: 20.0
-      use_local_topics: true
-
-/**:
-  joint_trajectory_command_broadcaster_right:
-    ros__parameters:
-      joints:
+      right_joints:
         - arm_r_joint1
         - arm_r_joint2
         - arm_r_joint3
@@ -60,9 +49,7 @@
         - arm_r_joint6
         - arm_r_joint7
         - gripper_r_joint1
-      interfaces:
-        - position
-      offsets:
+      right_offsets:
         - 0.0
         - 0.0
         - 0.0
@@ -71,8 +58,6 @@
         - 0.0
         - 0.0
         - 0.3
-      action_monitor_rate: 20.0
-      use_local_topics: true
 
 /**:
   spring_actuator_controller_left:
