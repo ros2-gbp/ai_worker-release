@@ -1,8 +1,0 @@
-ros-jazzy-ffw-robot-manager (1.1.9-1bookworm) bookworm; urgency=high
-
-  * Added robot manager ros2 controller
-  * Contributors: Woojin Wie
-
- -- Pyo <pyo@robotis.com>  Thu, 17 Jul 2025 15:00:00 -0000
-
-
