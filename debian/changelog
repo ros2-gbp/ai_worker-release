@@ -1,0 +1,20 @@
+ros-jazzy-ffw-robot-manager (1.1.11-1noble) noble; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Tue, 12 Aug 2025 15:00:00 -0000
+
+ros-jazzy-ffw-robot-manager (1.1.10-1noble) noble; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Mon, 21 Jul 2025 15:00:00 -0000
+
+ros-jazzy-ffw-robot-manager (1.1.9-1noble) noble; urgency=high
+
+  * Added robot manager ros2 controller
+  * Contributors: Woojin Wie
+
+ -- Pyo <pyo@robotis.com>  Thu, 17 Jul 2025 15:00:00 -0000
+
+
