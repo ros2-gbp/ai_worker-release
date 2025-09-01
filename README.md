@@ -1,3 +1,36 @@
+## ai_worker (jazzy) - 1.1.11-1
+
+The packages in the `ai_worker` repository were released into the `jazzy` distro by running `/usr/bin/bloom-release ai_worker -t jazzy -r jazzy --edit` on `Mon, 01 Sep 2025 12:16:32 -0000`
+
+These packages were released:
+- `ffw`
+- `ffw_bringup`
+- `ffw_description`
+- `ffw_joint_trajectory_command_broadcaster`
+- `ffw_joystick_controller`
+- `ffw_moveit_config`
+- `ffw_robot_manager`
+- `ffw_spring_actuator_controller`
+- `ffw_swerve_drive_controller`
+- `ffw_teleop`
+
+Version of package(s) in repository `ai_worker`:
+
+- upstream repository: https://github.com/ROBOTIS-GIT/ai_worker.git
+- release repository: https://github.com/ros2-gbp/ai_worker-release.git
+- rosdistro version: `1.1.10-1`
+- old version: `1.1.10-1`
+- new version: `1.1.11-1`
+
+Versions of tools used:
+
+- bloom version: `0.13.0`
+- catkin_pkg version: `1.0.0`
+- rosdep version: `0.26.0`
+- rosdistro version: `1.0.1`
+- vcstools version: `0.1.42`
+
+
 ## ai_worker (jazzy) - 1.1.10-1
 
 The packages in the `ai_worker` repository were released into the `jazzy` distro by running `/usr/bin/bloom-release ai_worker -t jazzy -r jazzy --edit` on `Thu, 14 Aug 2025 12:52:20 -0000`
