@@ -1,0 +1,12 @@
+Source: ros-rolling-ffw-description
+Section: misc
+Priority: optional
+Maintainer: Pyo <pyo@robotis.com>
+Build-Depends: debhelper (>= 9.0.0), ros-rolling-ament-cmake, ros-rolling-urdf, ros-rolling-ros-workspace
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-rolling-ffw-description
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-rolling-joint-state-publisher, ros-rolling-joint-state-publisher-gui, ros-rolling-robot-state-publisher, ros-rolling-rviz2, ros-rolling-urdf, ros-rolling-xacro, ros-rolling-ros-workspace
+Description: 3D models of the FFW for simulation and visualization
