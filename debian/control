@@ -1,0 +1,12 @@
+Source: ros-rolling-ffw
+Section: misc
+Priority: optional
+Maintainer: Pyo <pyo@robotis.com>
+Build-Depends: debhelper (>= 9.0.0), ros-rolling-ament-cmake, ros-rolling-ros-workspace
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-rolling-ffw
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-rolling-ffw-bringup, ros-rolling-ffw-description, ros-rolling-ffw-joint-trajectory-command-broadcaster, ros-rolling-ffw-joystick-controller, ros-rolling-ffw-moveit-config, ros-rolling-ffw-robot-manager, ros-rolling-ffw-spring-actuator-controller, ros-rolling-ffw-swerve-drive-controller, ros-rolling-ffw-teleop, ros-rolling-ros-workspace
+Description: ROS 2 meta package for FFW
