@@ -1,6 +1,27 @@
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 Changelog for package ffw
 ^^^^^^^^^^^^^^^^^^^^^^^^^
+1.1.16 (2026-01-20)
+-------------------
+* Added dual_laser_merger for SG2
+* Configured ros_gz_bridge via YAML
+* Updated Gazebo world and spawn parameters
+* Added Lidar support (URDF & Gazebo config)
+* Corrected inertial parameters for stability
+* Optimized wheel collision geometry
+* Initial release of ffw_navigation
+* Added Nav2, SLAM Toolbox, and AMCL config
+* Added default map and RViz setup
+* Contributors: Sungho Woo, HyunKyu Kim, Yongjun Kwon
+
+1.1.15 (2025-12-09)
+-------------------
+* Fixed Position and Velocity Unit for lift
+* Added Support for FFW SG2 lakibeam lidar
+* Added head eef tracker feature
+* Fixed deprecated fake_hardware to mock_hardware
+* Updated for new realtime_tools::RealtimePublisher API
+* Contributors: Woojin Wie, Wonho Yun
 
 1.1.14 (2025-10-14)
 -------------------
