@@ -2,6 +2,18 @@
 Changelog for package ffw_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.16 (2026-01-20)
+-------------------
+* Added Lidar support (URDF & Gazebo config)
+* Corrected inertial parameters for stability
+* Optimized wheel collision geometry
+* Contributors: Yongjun Kwon
+
+1.1.15 (2025-12-09)
+-------------------
+* Fixed deprecated fake_hardware to mock_hardware
+* Contributors: Woojin Wie, Wonho Yun
+
 1.1.14 (2025-10-14)
 -------------------
 * None
