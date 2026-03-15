@@ -1,0 +1,76 @@
+ros-jazzy-ffw-robot-manager (1.1.20-1noble) noble; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Wed, 11 Mar 2026 15:00:00 -0000
+
+ros-jazzy-ffw-robot-manager (1.1.19-1noble) noble; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Wed, 18 Feb 2026 15:00:00 -0000
+
+ros-jazzy-ffw-robot-manager (1.1.18-1noble) noble; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Sun, 08 Feb 2026 15:00:00 -0000
+
+ros-jazzy-ffw-robot-manager (1.1.17-1noble) noble; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Mon, 26 Jan 2026 15:00:00 -0000
+
+ros-jazzy-ffw-robot-manager (1.1.16-1noble) noble; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Mon, 19 Jan 2026 15:00:00 -0000
+
+ros-jazzy-ffw-robot-manager (1.1.15-1noble) noble; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Mon, 08 Dec 2025 15:00:00 -0000
+
+ros-jazzy-ffw-robot-manager (1.1.14-1noble) noble; urgency=high
+
+  * Corrected the battery monitoring feature when exceeding the maximum voltage
+  * Contributors: Woojin Wie
+
+ -- Pyo <pyo@robotis.com>  Mon, 13 Oct 2025 15:00:00 -0000
+
+ros-jazzy-ffw-robot-manager (1.1.13-1noble) noble; urgency=high
+
+  * Added support for battery monitoring for ffw_sg2_rev1
+  * Contributors: Woojin Wie
+
+ -- Pyo <pyo@robotis.com>  Mon, 13 Oct 2025 15:00:00 -0000
+
+ros-jazzy-ffw-robot-manager (1.1.12-1noble) noble; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Tue, 16 Sep 2025 15:00:00 -0000
+
+ros-jazzy-ffw-robot-manager (1.1.11-1noble) noble; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Tue, 12 Aug 2025 15:00:00 -0000
+
+ros-jazzy-ffw-robot-manager (1.1.10-1noble) noble; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Mon, 21 Jul 2025 15:00:00 -0000
+
+ros-jazzy-ffw-robot-manager (1.1.9-1noble) noble; urgency=high
+
+  * Added robot manager ros2 controller
+  * Contributors: Woojin Wie
+
+ -- Pyo <pyo@robotis.com>  Thu, 17 Jul 2025 15:00:00 -0000
+
+
