@@ -1,0 +1,12 @@
+Source: ros-jazzy-ffw-navigation
+Section: misc
+Priority: optional
+Maintainer: Pyo <pyo@robotis.com>
+Build-Depends: debhelper (>= 9.0.0), ros-jazzy-ament-cmake, ros-jazzy-ament-lint-auto <!nocheck>, ros-jazzy-ament-lint-common <!nocheck>, ros-jazzy-behaviortree-cpp, ros-jazzy-geometry-msgs, ros-jazzy-nav-msgs, ros-jazzy-rclcpp, ros-jazzy-ros-workspace
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-jazzy-ffw-navigation
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-jazzy-behaviortree-cpp, ros-jazzy-geometry-msgs, ros-jazzy-nav-msgs, ros-jazzy-nav2-bringup, ros-jazzy-nav2-simple-commander, ros-jazzy-navigation2, ros-jazzy-rclcpp, ros-jazzy-rviz2, ros-jazzy-slam-toolbox, ros-jazzy-ros-workspace
+Description: ffw_navigation
