@@ -2,48 +2,6 @@
 Changelog for package ffw_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.2.1 (2026-04-09)
-------------------
-* Fixed palm joint name for HX5
-* Contributors: Hyunwoo Nam
-
-1.2.0 (2026-04-01)
-------------------
-* Added support for SH5, BH5
-* Contributors: Hyunwoo Nam
-
-1.1.21 (2026-03-26)
--------------------
-* None
-
-1.1.20 (2026-03-12)
--------------------
-* None
-
-1.1.19 (2026-02-19)
--------------------
-* None
-
-1.1.18 (2026-02-09)
--------------------
-* None
-
-1.1.17 (2026-01-27)
--------------------
-* None
-
-1.1.16 (2026-01-20)
--------------------
-* Added Lidar support (URDF & Gazebo config)
-* Corrected inertial parameters for stability
-* Optimized wheel collision geometry
-* Contributors: Yongjun Kwon
-
-1.1.15 (2025-12-09)
--------------------
-* Fixed deprecated fake_hardware to mock_hardware
-* Contributors: Woojin Wie, Wonho Yun
-
 1.1.14 (2025-10-14)
 -------------------
 * None
