@@ -1,0 +1,12 @@
+Source: ros-lyrical-ffw
+Section: misc
+Priority: optional
+Maintainer: Pyo <pyo@robotis.com>
+Build-Depends: debhelper (>= 9.0.0), ros-lyrical-ament-cmake, ros-lyrical-ros-workspace
+Homepage: https://index.ros.org/p/ffw/#lyrical
+Standards-Version: 3.9.2
+
+Package: ros-lyrical-ffw
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-lyrical-ffw-bringup, ros-lyrical-ffw-description, ros-lyrical-ffw-joint-trajectory-command-broadcaster, ros-lyrical-ffw-joystick-controller, ros-lyrical-ffw-moveit-config, ros-lyrical-ffw-robot-manager, ros-lyrical-ffw-spring-actuator-controller, ros-lyrical-ffw-swerve-drive-controller, ros-lyrical-ffw-teleop, ros-lyrical-ros-workspace
+Description: ROS 2 meta package for FFW
