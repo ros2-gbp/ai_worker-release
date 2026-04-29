@@ -1,0 +1,12 @@
+Source: ros-lyrical-ffw-robot-manager
+Section: misc
+Priority: optional
+Maintainer: Pyo <pyo@robotis.com>
+Build-Depends: debhelper (>= 9.0.0), ros-lyrical-ament-cmake, ros-lyrical-ament-lint-auto <!nocheck>, ros-lyrical-ament-lint-common <!nocheck>, ros-lyrical-controller-interface, ros-lyrical-dynamixel-hardware-interface, ros-lyrical-dynamixel-interfaces, ros-lyrical-generate-parameter-library, ros-lyrical-hardware-interface, ros-lyrical-pluginlib, ros-lyrical-rclcpp, ros-lyrical-ros2-control-cmake, ros-lyrical-sensor-msgs, ros-lyrical-std-srvs, ros-lyrical-ros-workspace
+Homepage: https://index.ros.org/p/ffw_robot_manager/#lyrical
+Standards-Version: 3.9.2
+
+Package: ros-lyrical-ffw-robot-manager
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-lyrical-controller-interface, ros-lyrical-dynamixel-hardware-interface, ros-lyrical-dynamixel-interfaces, ros-lyrical-generate-parameter-library, ros-lyrical-hardware-interface, ros-lyrical-pluginlib, ros-lyrical-rclcpp, ros-lyrical-sensor-msgs, ros-lyrical-std-srvs, ros-lyrical-ros-workspace
+Description: ROS2 controller that logs GPIO Error Code and Hardware Error Status for all GPIO devices.

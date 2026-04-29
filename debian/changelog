@@ -1,0 +1,40 @@
+ros-lyrical-ffw-robot-manager (1.1.14-3trixie) trixie; urgency=high
+
+  * Corrected the battery monitoring feature when exceeding the maximum voltage
+  * Contributors: Woojin Wie
+
+ -- Pyo <pyo@robotis.com>  Tue, 14 Oct 2025 00:00:00 -0000
+
+ros-lyrical-ffw-robot-manager (1.1.13-3trixie) trixie; urgency=high
+
+  * Added support for battery monitoring for ffw_sg2_rev1
+  * Contributors: Woojin Wie
+
+ -- Pyo <pyo@robotis.com>  Tue, 14 Oct 2025 00:00:00 -0000
+
+ros-lyrical-ffw-robot-manager (1.1.12-3trixie) trixie; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Wed, 17 Sep 2025 00:00:00 -0000
+
+ros-lyrical-ffw-robot-manager (1.1.11-3trixie) trixie; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Wed, 13 Aug 2025 00:00:00 -0000
+
+ros-lyrical-ffw-robot-manager (1.1.10-3trixie) trixie; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Tue, 22 Jul 2025 00:00:00 -0000
+
+ros-lyrical-ffw-robot-manager (1.1.9-3trixie) trixie; urgency=high
+
+  * Added robot manager ros2 controller
+  * Contributors: Woojin Wie
+
+ -- Pyo <pyo@robotis.com>  Fri, 18 Jul 2025 00:00:00 -0000
+
+
