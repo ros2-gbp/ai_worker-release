@@ -1,0 +1,12 @@
+Source: ros-lyrical-ffw-swerve-drive-controller
+Section: misc
+Priority: optional
+Maintainer: Pyo <pyo@robotis.com>
+Build-Depends: debhelper (>= 9.0.0), ros-lyrical-ament-cmake-gmock <!nocheck>, ros-lyrical-ament-cmake-ros, ros-lyrical-ament-lint-auto <!nocheck>, ros-lyrical-ament-lint-common <!nocheck>, ros-lyrical-control-msgs, ros-lyrical-controller-interface, ros-lyrical-controller-manager <!nocheck>, ros-lyrical-generate-parameter-library, ros-lyrical-geometry-msgs, ros-lyrical-hardware-interface, ros-lyrical-hardware-interface-testing <!nocheck>, ros-lyrical-nav-msgs, ros-lyrical-pluginlib, ros-lyrical-rclcpp, ros-lyrical-rclcpp-lifecycle, ros-lyrical-rcpputils, ros-lyrical-realtime-tools, ros-lyrical-ros2-control-test-assets <!nocheck>, ros-lyrical-sensor-msgs, ros-lyrical-std-srvs, ros-lyrical-tf2, ros-lyrical-tf2-geometry-msgs, ros-lyrical-tf2-msgs, ros-lyrical-visualization-msgs, ros-lyrical-ros-workspace
+Homepage: https://index.ros.org/p/ffw_swerve_drive_controller/#lyrical
+Standards-Version: 3.9.2
+
+Package: ros-lyrical-ffw-swerve-drive-controller
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-lyrical-control-msgs, ros-lyrical-controller-interface, ros-lyrical-geometry-msgs, ros-lyrical-hardware-interface, ros-lyrical-nav-msgs, ros-lyrical-pluginlib, ros-lyrical-rclcpp, ros-lyrical-rclcpp-lifecycle, ros-lyrical-rcpputils, ros-lyrical-realtime-tools, ros-lyrical-sensor-msgs, ros-lyrical-std-srvs, ros-lyrical-tf2, ros-lyrical-tf2-geometry-msgs, ros-lyrical-tf2-msgs, ros-lyrical-visualization-msgs, ros-lyrical-ros-workspace
+Description: AI Worker's swerve drive ros2_controller
