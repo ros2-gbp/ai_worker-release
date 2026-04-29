@@ -1,0 +1,138 @@
+ros-lyrical-ffw-joystick-controller (1.1.14-3resolute) resolute; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Tue, 14 Oct 2025 00:00:00 -0000
+
+ros-lyrical-ffw-joystick-controller (1.1.13-3resolute) resolute; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Tue, 14 Oct 2025 00:00:00 -0000
+
+ros-lyrical-ffw-joystick-controller (1.1.12-3resolute) resolute; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Wed, 17 Sep 2025 00:00:00 -0000
+
+ros-lyrical-ffw-joystick-controller (1.1.11-3resolute) resolute; urgency=high
+
+  * Added tactile switch feature to joystick controller
+  * Contributors: Wonho Yun
+
+ -- Pyo <pyo@robotis.com>  Wed, 13 Aug 2025 00:00:00 -0000
+
+ros-lyrical-ffw-joystick-controller (1.1.10-3resolute) resolute; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Tue, 22 Jul 2025 00:00:00 -0000
+
+ros-lyrical-ffw-joystick-controller (1.1.9-3resolute) resolute; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Fri, 18 Jul 2025 00:00:00 -0000
+
+ros-lyrical-ffw-joystick-controller (1.1.8-3resolute) resolute; urgency=high
+
+  * Modified joystick controller to enable lift control while in swerve mode
+  * Refactored joystick controller
+  * Contributors: Wonho Yun
+
+ -- Pyo <pyo@robotis.com>  Mon, 14 Jul 2025 00:00:00 -0000
+
+ros-lyrical-ffw-joystick-controller (1.1.7-3resolute) resolute; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Fri, 11 Jul 2025 00:00:00 -0000
+
+ros-lyrical-ffw-joystick-controller (1.1.6-3resolute) resolute; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Mon, 07 Jul 2025 00:00:00 -0000
+
+ros-lyrical-ffw-joystick-controller (1.1.5-3resolute) resolute; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Mon, 30 Jun 2025 00:00:00 -0000
+
+ros-lyrical-ffw-joystick-controller (1.1.4-3resolute) resolute; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Fri, 27 Jun 2025 00:00:00 -0000
+
+ros-lyrical-ffw-joystick-controller (1.1.3-3resolute) resolute; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Thu, 26 Jun 2025 00:00:00 -0000
+
+ros-lyrical-ffw-joystick-controller (1.1.2-3resolute) resolute; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Thu, 26 Jun 2025 00:00:00 -0000
+
+ros-lyrical-ffw-joystick-controller (1.1.1-3resolute) resolute; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Thu, 26 Jun 2025 00:00:00 -0000
+
+ros-lyrical-ffw-joystick-controller (1.1.0-3resolute) resolute; urgency=high
+
+  * Modify joystick controller to support swerve mode
+  * Contributors: Woojin Wie, Wonho Yun
+
+ -- Pyo <pyo@robotis.com>  Mon, 16 Jun 2025 00:00:00 -0000
+
+ros-lyrical-ffw-joystick-controller (1.0.9-3resolute) resolute; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Mon, 09 Jun 2025 00:00:00 -0000
+
+ros-lyrical-ffw-joystick-controller (1.0.8-3resolute) resolute; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Mon, 02 Jun 2025 00:00:00 -0000
+
+ros-lyrical-ffw-joystick-controller (1.0.7-3resolute) resolute; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Fri, 30 May 2025 00:00:00 -0000
+
+ros-lyrical-ffw-joystick-controller (1.0.6-3resolute) resolute; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Wed, 28 May 2025 00:00:00 -0000
+
+ros-lyrical-ffw-joystick-controller (1.0.5-3resolute) resolute; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Fri, 09 May 2025 00:00:00 -0000
+
+ros-lyrical-ffw-joystick-controller (1.0.4-3resolute) resolute; urgency=high
+
+  * None
+
+ -- Pyo <pyo@robotis.com>  Thu, 08 May 2025 00:00:00 -0000
+
+ros-lyrical-ffw-joystick-controller (1.0.3-3resolute) resolute; urgency=high
+
+  * Added support for Joystick controller
+  * Contributors: Woojin Wie
+
+ -- Pyo <pyo@robotis.com>  Mon, 28 Apr 2025 00:00:00 -0000
+
+
