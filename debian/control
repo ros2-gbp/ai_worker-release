@@ -1,0 +1,12 @@
+Source: ros-lyrical-ffw-description
+Section: misc
+Priority: optional
+Maintainer: Pyo <pyo@robotis.com>
+Build-Depends: debhelper (>= 9.0.0), ros-lyrical-ament-cmake, ros-lyrical-urdf, ros-lyrical-ros-workspace
+Homepage: https://index.ros.org/p/ffw_description/#lyrical
+Standards-Version: 3.9.2
+
+Package: ros-lyrical-ffw-description
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-lyrical-joint-state-publisher, ros-lyrical-joint-state-publisher-gui, ros-lyrical-robot-state-publisher, ros-lyrical-rviz2, ros-lyrical-urdf, ros-lyrical-xacro, ros-lyrical-ros-workspace
+Description: 3D models of the FFW for simulation and visualization
