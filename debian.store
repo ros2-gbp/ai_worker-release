@@ -1,1 +1,1 @@
-{"base": "ebf83c642a1a", "parent": "debian/rolling/ffw_moveit_config", "previous": "2efba0af7779", "trim": "", "trimbase": ""}
+{"base": "2240d854", "parent": "debian/lyrical/ffw_moveit_config", "previous": "bf8d297a", "trim": "", "trimbase": ""}
